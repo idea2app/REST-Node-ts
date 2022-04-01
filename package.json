@@ -1,0 +1,32 @@
+{
+  "name": "@idea2app/rest-node-ts",
+  "version": "0.1.0",
+  "license": "LGPL-3.0",
+  "author": "shiy2008@gmail.com",
+  "description": "",
+  "homepage": "https://github.com/idea2app/REST-Node-ts#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/idea2app/REST-Node-ts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/idea2app/REST-Node-ts/issues"
+  },
+  "source": "source/index.ts",
+  "main": "dist/index.js",
+  "engines": {
+    "node": "^14.0.0"
+  },
+  "dependencies": {
+    "koa": "^2.13.4"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.13.4",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.6.3"
+  },
+  "scripts": {
+    "dev": "ts-node-dev source/",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

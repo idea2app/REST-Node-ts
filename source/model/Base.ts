@@ -1,13 +1,32 @@
-import { IsInt, Min, IsDateString } from 'class-validator';
+import { IsInt, Min, IsDate, IsOptional } from 'class-validator';
+import {
+    PrimaryGeneratedColumn,
+    CreateDateColumn,
+    UpdateDateColumn
+} from 'typeorm';
 
-export abstract class Base {
+export abstract class BaseModel {
     @IsInt()
     @Min(1)
+    @IsOptional()
     id: number;
 
-    @IsDateString()
-    createdAt: string;
+    @IsDate()
+    @IsOptional()
+    createdAt: Date;
 
-    @IsDateString()
-    updatedAt: string;
+    @IsDate()
+    @IsOptional()
+    updatedAt: Date;
+}
+
+export abstract class Base implements BaseModel {
+    @PrimaryGeneratedColumn()
+    id: number;
+
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @UpdateDateColumn()
+    updatedAt: Date;
 }

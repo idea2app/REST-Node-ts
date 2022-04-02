@@ -1,0 +1,20 @@
+services:
+    - type: web
+      name: rest-node-ts-server
+      plan: free
+      env: node
+      buildCommand: yarn install && yarn build
+      startCommand: yarn start
+      healthCheckPath: /_health
+      envVars:
+          - key: NODE_VERSION
+            value: 14.19.0
+          - key: NODE_ENV
+            value: production
+          - key: DATABASE_URL
+            fromDatabase:
+                name: rest-node-ts-data
+                property: connectionString
+databases:
+    - name: rest-node-ts-data
+      plan: free

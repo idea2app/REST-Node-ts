@@ -1,20 +1,21 @@
-import { JsonController, Get } from 'routing-controllers';
+import { JsonController, Get, Post, Body } from 'routing-controllers';
 import { ResponseSchema } from 'routing-controllers-openapi';
 
-import { Home } from '../model/Home';
+import dataSource, { HomeModel, Home } from '../model';
 
 @JsonController('/')
 export class HomeController {
     @Get()
-    @ResponseSchema(Home)
-    getEntry() {
-        const createdAt = new Date().toJSON();
+    @ResponseSchema(HomeModel, { isArray: true })
+    getList() {
+        return dataSource.getRepository(Home).find();
+    }
 
-        return {
-            id: 1,
-            createdAt,
-            updatedAt: createdAt,
-            content: 'Hello, REST-Node-ts!'
-        };
+    @Post()
+    @ResponseSchema(HomeModel)
+    createOne(@Body() data: HomeModel) {
+        return dataSource
+            .getRepository(Home)
+            .save(Object.assign(new Home(), data));
     }
 }

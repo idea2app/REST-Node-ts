@@ -5,6 +5,7 @@ import cors from '@koa/cors';
 import { useKoaServer } from 'routing-controllers';
 
 import { swagger, mocker, router } from './controller';
+import dataSource from './model';
 
 const { PORT = 8080 } = process.env;
 
@@ -13,13 +14,15 @@ const HOST = `http://localhost:${PORT}`,
 
 useKoaServer(app, router);
 
-console.time('HTTP boot');
+console.time('Server boot');
 
-app.listen(PORT, () => {
-    console.log(`
+dataSource.initialize().then(() =>
+    app.listen(PORT, () => {
+        console.log(`
 HTTP served at ${HOST}
 Swagger API served at ${HOST}/docs/
 Mock API served at ${HOST}/mock/
 `);
-    console.timeEnd('HTTP boot');
-});
+        console.timeEnd('Server boot');
+    })
+);

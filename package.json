@@ -1,6 +1,6 @@
 {
     "name": "@idea2app/rest-node-ts",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "license": "LGPL-3.0",
     "author": "shiy2008@gmail.com",
     "description": "RESTful API service scaffold based on Node.js & TypeScript",
@@ -28,17 +28,22 @@
         "koa-multer": "^1.0.2",
         "koa-router": "^10.1.1",
         "koagger": "^0.2.4",
+        "pg": "^8.7.3",
+        "pg-connection-string": "^2.5.0",
         "reflect-metadata": "^0.1.13",
         "routing-controllers": "^0.9.0",
-        "routing-controllers-openapi": "^3.1.0"
+        "routing-controllers-openapi": "^3.1.0",
+        "typeorm": "^0.3.4"
     },
     "devDependencies": {
         "@types/koa": "^2.13.4",
         "@types/koa-logger": "^3.1.2",
         "@types/koa__cors": "^3.1.1",
+        "cross-env": "^7.0.3",
         "husky": "^7.0.4",
         "lint-staged": "^12.3.7",
         "prettier": "^2.6.1",
+        "sqlite3": "^5.0.2",
         "ts-node-dev": "^1.1.8",
         "typescript": "^4.6.3"
     },
@@ -56,6 +61,11 @@
         "dev": "ts-node-dev source/",
         "test": "lint-staged",
         "build": "rm -rf dist/  &&  tsc",
-        "start": "npm run build  &&  node dist/"
+        "start": "node dist/",
+        "typeorm": "typeorm-ts-node-commonjs -d source/model/index.ts",
+        "migration:generate": "npm run typeorm -- migration:generate .data/migration",
+        "migration:run": "npm run typeorm -- migration:run",
+        "upgrade:dev": "npm run migration:generate  &&  npm run migration:run",
+        "upgrade:pro": "cross-env NODE_ENV=production  npm run migration:generate  &&  npm run migration:run"
     }
 }

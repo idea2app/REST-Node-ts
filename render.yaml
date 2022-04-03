@@ -3,8 +3,8 @@ services:
       name: rest-node-ts-server
       plan: free
       env: node
-      buildCommand: yarn install && yarn build
-      startCommand: yarn start
+      buildCommand: npm install  &&  npm run build
+      startCommand: npm start
       healthCheckPath: /_health
       envVars:
           - key: NODE_VERSION

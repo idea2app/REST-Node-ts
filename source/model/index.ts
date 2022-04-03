@@ -11,7 +11,7 @@ const { NODE_ENV, DATABASE_URL } = process.env;
 
 const isProduct = NODE_ENV === 'production';
 
-const { host, port, user, password } = isProduct
+const { host, port, user, password, database } = isProduct
     ? parse(DATABASE_URL)
     : ({} as ConnectionOptions);
 
@@ -19,9 +19,9 @@ const commonOptions: Pick<
     SqliteConnectionOptions,
     'synchronize' | 'entities' | 'migrations'
 > = {
-    synchronize: true,
+    synchronize: !isProduct,
     entities: [Home],
-    migrations: ['.data/*.ts']
+    migrations: [`${isProduct ? '.data' : 'migration'}/*.ts`]
 };
 
 export default isProduct
@@ -31,6 +31,7 @@ export default isProduct
           port: +port,
           username: user,
           password,
+          database,
           logging: true,
           ...commonOptions
       })

@@ -63,9 +63,9 @@
         "build": "rm -rf dist/  &&  tsc",
         "start": "node dist/",
         "typeorm": "typeorm-ts-node-commonjs -d source/model/index.ts",
-        "migration:generate": "npm run typeorm -- migration:generate .data/migration",
+        "migration:generate": "npm run typeorm -- migration:generate",
         "migration:run": "npm run typeorm -- migration:run",
-        "upgrade:dev": "npm run migration:generate  &&  npm run migration:run",
-        "upgrade:pro": "cross-env NODE_ENV=production  npm run migration:generate  &&  npm run migration:run"
+        "upgrade:dev": "npm run migration:generate -- migration/version  &&  npm run migration:run",
+        "upgrade:pro": "cross-env NODE_ENV=production  npm run migration:generate -- .data/version  &&  npm run migration:run"
     }
 }

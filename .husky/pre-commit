@@ -3,3 +3,4 @@
 . "$(dirname "$0")/_/husky.sh"
 
 npm test
+npm run migration:generate  &&  git add migration/*  ||  true

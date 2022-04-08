@@ -5,17 +5,17 @@ import dataSource, { HomeModel, Home } from '../model';
 
 @JsonController('/')
 export class HomeController {
+    store = dataSource.getRepository(Home);
+
     @Get()
     @ResponseSchema(HomeModel, { isArray: true })
     getList() {
-        return dataSource.getRepository(Home).find();
+        return this.store.find();
     }
 
     @Post()
     @ResponseSchema(HomeModel)
     createOne(@Body() data: HomeModel) {
-        return dataSource
-            .getRepository(Home)
-            .save(Object.assign(new Home(), data));
+        return this.store.save(Object.assign(new Home(), data));
     }
 }

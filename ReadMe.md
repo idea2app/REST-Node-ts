@@ -13,6 +13,12 @@
 5. API document: [Swagger][10]
 6. Mock API: [OpenAPI backend][11]
 
+## Environment variables
+
+|     Name     |          Usage           |
+| :----------: | :----------------------: |
+| `APP_SECRET` | encrypt Password & Token |
+
 ## Usage
 
 ### Development

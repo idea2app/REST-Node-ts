@@ -3,13 +3,15 @@ import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionO
 import { ConnectionOptions, parse } from 'pg-connection-string';
 
 import { Home } from './Home';
+import { User } from './User';
 
 export * from './Base';
 export * from './Home';
+export * from './User';
 
 const { NODE_ENV, DATABASE_URL } = process.env;
 
-const isProduct = NODE_ENV === 'production';
+export const isProduct = NODE_ENV === 'production';
 
 const { host, port, user, password, database } = isProduct
     ? parse(DATABASE_URL)
@@ -20,7 +22,7 @@ const commonOptions: Pick<
     'synchronize' | 'entities' | 'migrations'
 > = {
     synchronize: !isProduct,
-    entities: [Home],
+    entities: [Home, User],
     migrations: [`${isProduct ? '.data' : 'migration'}/*.ts`]
 };
 

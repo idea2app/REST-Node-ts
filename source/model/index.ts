@@ -21,7 +21,7 @@ const commonOptions: Pick<
     SqliteConnectionOptions,
     'synchronize' | 'entities' | 'migrations'
 > = {
-    synchronize: !isProduct,
+    synchronize: true,
     entities: [Home, User],
     migrations: [`${isProduct ? '.data' : 'migration'}/*.ts`]
 };

@@ -34,7 +34,7 @@ dataSource.initialize().then(() =>
 HTTP served at ${HOST}
 Swagger API served at ${HOST}/docs/`);
 
-        if (!isProduct) console.log('Mock API served at ${HOST}/mock/\n');
+        if (!isProduct) console.log(`Mock API served at ${HOST}/mock/\n`);
 
         console.timeEnd('Server boot');
     })

@@ -64,11 +64,9 @@ export class User extends Base implements UserModel {
     @Column({ nullable: true })
     avatar: string;
 
-    @Index({ unique: true })
     @Column({ nullable: true })
     email?: string;
 
-    @Index({ unique: true })
     @Column({ nullable: true })
     mobilePhone?: string;
 

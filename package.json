@@ -1,6 +1,6 @@
 {
     "name": "@idea2app/rest-node-ts",
-    "version": "0.3.0",
+    "version": "0.5.0",
     "license": "LGPL-3.0",
     "author": "shiy2008@gmail.com",
     "description": "RESTful API service scaffold based on Node.js & TypeScript",
@@ -72,6 +72,8 @@
         "migration:generate": "npm run typeorm -- migration:generate",
         "migration:run": "npm run typeorm -- migration:run",
         "upgrade:dev": "npm run migration:generate -- migration/version  &&  npm run migration:run",
-        "upgrade:pro": "cross-env NODE_ENV=production  npm run migration:generate -- .data/version  &&  npm run migration:run"
+        "upgrade:pro": "cross-env NODE_ENV=production  npm run migration:generate -- .data/version  &&  npm run migration:run",
+        "pack-image": "docker build -t rest-node-ts:latest .",
+        "container": "docker rm -f rest-node-ts  &&  docker run --name rest-node-ts -p 8080:8080 -d rest-node-ts:latest"
     }
 }

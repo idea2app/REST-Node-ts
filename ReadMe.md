@@ -52,6 +52,13 @@ npm start
 pnpm upgrade:pro
 ```
 
+#### Docker
+
+```shell
+pnpm pack-image
+pnpm container
+```
+
 [1]: https://en.wikipedia.org/wiki/Representational_state_transfer
 [2]: https://nodejs.org/
 [3]: https://www.typescriptlang.org/

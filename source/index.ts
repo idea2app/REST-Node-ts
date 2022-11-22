@@ -14,7 +14,7 @@ const { PORT = 8080, APP_SECRET } = process.env;
 const HOST = `http://localhost:${PORT}`,
     app = new Koa()
         .use(KoaLogger())
-        .use(swagger())
+        .use(swagger({ exposeSpec: true }))
         .use(jwt({ secret: APP_SECRET, passthrough: true }));
 
 if (!isProduct) app.use(mocker());
@@ -32,7 +32,8 @@ dataSource.initialize().then(() =>
     app.listen(PORT, () => {
         console.log(`
 HTTP served at ${HOST}
-Swagger API served at ${HOST}/docs/`);
+Swagger API served at ${HOST}/docs/
+Swagger API exposed at ${HOST}/docs/spec`);
 
         if (!isProduct) console.log(`Mock API served at ${HOST}/mock/\n`);
 

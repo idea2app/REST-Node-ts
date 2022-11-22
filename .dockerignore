@@ -1,0 +1,9 @@
+ReadMe.md
+node_modules/
+dist/
+.data/
+start.sh
+.husky/
+.github/
+.vscode/
+*.pem

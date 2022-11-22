@@ -26,7 +26,8 @@
 Execute a command:
 
 ```shell
-npm run dev
+npm i pnpm -g
+pnpm dev
 ```
 
 or just press <kbd>F5</kbd> key in [VS Code][12].
@@ -34,7 +35,7 @@ or just press <kbd>F5</kbd> key in [VS Code][12].
 #### Migration
 
 ```shell
-npm run upgrade:dev
+pnpm upgrade:dev
 ```
 
 ### Deployment
@@ -48,7 +49,7 @@ npm start
 #### Migration
 
 ```shell
-npm run upgrade:pro
+pnpm upgrade:pro
 ```
 
 [1]: https://en.wikipedia.org/wiki/Representational_state_transfer

@@ -6,6 +6,7 @@
         "esModuleInterop": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
+        "importHelpers": true,
         "outDir": "dist"
     },
     "include": ["source/**/*.ts"]

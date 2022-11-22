@@ -1,5 +1,6 @@
 import { Constructor } from 'web-utility';
 import {
+    JsonController,
     Get,
     Post,
     Patch,
@@ -15,15 +16,18 @@ import { Repository } from 'typeorm';
 import dataSource, { BaseModel, Base } from '../model';
 
 export function Controller<M extends BaseModel, E extends Base>(
+    rootPath: `/${string}`,
     Model: Constructor<M>,
     Entity: Constructor<E>
 ) {
+    type Model = typeof Model;
+
+    @JsonController(rootPath)
     abstract class BaseController {
         store = dataSource.getRepository(Entity);
 
         @Post()
         @ResponseSchema(Model)
-        // @ts-ignore
         createOne(@Body() data: Model) {
             const entity = new Entity();
 
@@ -32,9 +36,8 @@ export function Controller<M extends BaseModel, E extends Base>(
 
         @Patch('/:id')
         @ResponseSchema(Model)
-        // @ts-ignore
         async updateOne(@Param('id') id: number, @Body() data: Model) {
-            const { raw } = await this.store.update(id, data);
+            const { raw } = await this.store.update(id, { ...data });
 
             return raw;
         }

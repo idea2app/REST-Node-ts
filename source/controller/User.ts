@@ -17,7 +17,7 @@ import { Controller } from './Base';
 const { APP_SECRET } = process.env;
 
 @JsonController('/user')
-export class UserController extends Controller(UserModel, User) {
+export class UserController extends Controller('/user', UserModel, User) {
     static encrypt(raw: string) {
         return createHash('sha1')
             .update(APP_SECRET + raw)

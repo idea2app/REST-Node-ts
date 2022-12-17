@@ -1,18 +1,35 @@
 version: '3'
 
+volumes:
+    database-data:
 networks:
     idea2app:
 
 services:
+    postgres:
+        image: postgres
+        environment:
+            - POSTGRES_PASSWORD=${APP_SECRET}
+        volumes:
+            - database-data:/var/lib/postgresql/data/
+        ports:
+            - 5432:5432
+        networks:
+            - idea2app
+        restart: always
     rest-node-ts:
+        depends_on:
+            - postgres
         image: idea2app/rest-node-ts
         environment:
             - NODE_ENV=production
+            - DATABASE_URL=postgres://postgres:${APP_SECRET}@postgres:5432/postgres
             - PORT=8080
         ports:
             - 8080:8080
         networks:
             - idea2app
+        restart: always
     caddy:
         depends_on:
             - rest-node-ts

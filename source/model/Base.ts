@@ -1,23 +1,42 @@
-import { IsInt, Min, IsDate, IsOptional } from 'class-validator';
+import { IsInt, IsOptional, IsString, Min } from 'class-validator';
 import {
     PrimaryGeneratedColumn,
     CreateDateColumn,
     UpdateDateColumn
 } from 'typeorm';
 
-export abstract class BaseModel {
+import { UserOutput } from './User';
+
+export interface BaseModel {
+    id: number;
+    createdAt: Date;
+    updatedAt?: Date;
+}
+
+export interface UserBaseModel extends BaseModel {
+    createdBy: UserOutput;
+    updatedBy?: UserOutput;
+}
+
+export class BaseFilter {
     @IsInt()
     @Min(1)
     @IsOptional()
-    id: number;
+    pageSize?: number = 10;
 
-    @IsDate()
+    @IsInt()
+    @Min(1)
     @IsOptional()
-    createdAt: Date;
+    pageIndex?: number = 1;
 
-    @IsDate()
+    @IsString()
     @IsOptional()
-    updatedAt: Date;
+    keywords?: string;
+}
+
+export interface ListChunk<T extends BaseModel> {
+    count: number;
+    list: T[];
 }
 
 export abstract class Base implements BaseModel {

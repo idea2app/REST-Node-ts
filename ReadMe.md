@@ -17,9 +17,10 @@
 
 ## Environment variables
 
-|     Name     |          Usage           |
-| :----------: | :----------------------: |
-| `APP_SECRET` | encrypt Password & Token |
+|      Name      |            Usage             |
+| :------------: | :--------------------------: |
+|  `APP_SECRET`  |   encrypt Password & Token   |
+| `DATABASE_URL` | PostgreSQL connection string |
 
 ## Usage
 

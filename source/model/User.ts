@@ -14,7 +14,6 @@ import {
 } from 'class-validator';
 import { JsonWebTokenError } from 'jsonwebtoken';
 import { ParameterizedContext } from 'koa';
-import { NewData } from 'mobx-restful';
 import { Column, Entity, ManyToOne } from 'typeorm';
 
 import { Base, BaseFilter, BaseModel, ListChunk, UserBaseModel } from './Base';
@@ -60,7 +59,7 @@ export class UserInput {
     roles?: Role[];
 }
 
-export class UserFilter extends BaseFilter implements NewData<UserInput> {
+export class UserFilter extends BaseFilter implements Partial<UserInput> {
     @IsEmail()
     @IsOptional()
     email?: string;

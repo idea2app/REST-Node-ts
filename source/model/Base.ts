@@ -1,7 +1,7 @@
 import { IsInt, IsOptional, IsString, Min } from 'class-validator';
 import {
-    PrimaryGeneratedColumn,
     CreateDateColumn,
+    PrimaryGeneratedColumn,
     UpdateDateColumn
 } from 'typeorm';
 

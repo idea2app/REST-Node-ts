@@ -2,11 +2,11 @@ import 'reflect-metadata';
 import 'dotenv/config';
 
 import Koa from 'koa';
-import KoaLogger from 'koa-logger';
 import jwt from 'koa-jwt';
+import KoaLogger from 'koa-logger';
 import { useKoaServer } from 'routing-controllers';
 
-import { swagger, mocker, router, UserController } from './controller';
+import { mocker, router, swagger, UserController } from './controller';
 import dataSource, { isProduct } from './model';
 
 const { PORT = 8080, APP_SECRET } = process.env;

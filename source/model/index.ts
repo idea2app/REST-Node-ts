@@ -1,6 +1,6 @@
+import { ConnectionOptions, parse } from 'pg-connection-string';
 import { DataSource } from 'typeorm';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
-import { ConnectionOptions, parse } from 'pg-connection-string';
 
 import { User } from './User';
 

@@ -72,6 +72,7 @@ export class UserController {
     async signUp(@Body() data: SignInData) {
         const sum = await this.store.count();
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { password, ...user } = await this.store.save(
             Object.assign(new User(), data, {
                 password: UserController.encrypt(data.password),

@@ -1,29 +1,28 @@
-import { IsInt, IsOptional, IsString, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+    IsDateString,
+    IsInt,
+    IsOptional,
+    IsString,
+    Min
+} from 'class-validator';
+import { NewData } from 'mobx-restful';
 import {
     CreateDateColumn,
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from 'typeorm';
 
-import { UserOutput } from './User';
-
-export interface BaseModel {
-    id: number;
-    createdAt: Date;
-    updatedAt?: Date;
-}
-
-export interface UserBaseModel extends BaseModel {
-    createdBy: UserOutput;
-    updatedBy?: UserOutput;
-}
+export type InputData<T> = NewData<Omit<T, keyof Base>, Base>;
 
 export class BaseFilter {
+    @Type(() => Number)
     @IsInt()
     @Min(1)
     @IsOptional()
     pageSize?: number = 10;
 
+    @Type(() => Number)
     @IsInt()
     @Min(1)
     @IsOptional()
@@ -34,18 +33,22 @@ export class BaseFilter {
     keywords?: string;
 }
 
-export interface ListChunk<T extends BaseModel> {
+export interface ListChunk<T extends Base> {
     count: number;
     list: T[];
 }
 
-export abstract class Base implements BaseModel {
+export abstract class Base {
+    @IsInt()
     @PrimaryGeneratedColumn()
     id: number;
 
+    @IsDateString()
     @CreateDateColumn()
-    createdAt: Date;
+    createdAt: string;
 
+    @IsDateString()
+    @IsOptional()
     @UpdateDateColumn()
-    updatedAt: Date;
+    updatedAt?: string;
 }

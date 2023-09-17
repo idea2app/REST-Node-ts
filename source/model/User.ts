@@ -1,27 +1,27 @@
 import { Type } from 'class-transformer';
 import {
-    IsDate,
     IsEmail,
     IsEnum,
     IsInt,
     IsMobilePhone,
     IsOptional,
-    IsPhoneNumber,
     IsString,
+    IsStrongPassword,
     IsUrl,
     Min,
     ValidateNested
 } from 'class-validator';
 import { JsonWebTokenError } from 'jsonwebtoken';
 import { ParameterizedContext } from 'koa';
+import { NewData } from 'mobx-restful';
 import { Column, Entity, ManyToOne } from 'typeorm';
 
-import { Base, BaseFilter, BaseModel, ListChunk, UserBaseModel } from './Base';
+import { Base, BaseFilter, InputData, ListChunk } from './Base';
 
 export enum Gender {
-    Female,
-    Male,
-    Other
+    Female = 0,
+    Male = 1,
+    Other = 2
 }
 
 export enum Role {
@@ -30,7 +30,7 @@ export enum Role {
     Client
 }
 
-export class UserInput {
+export class UserInput implements Partial<InputData<User>> {
     @IsString()
     name: string;
 
@@ -59,12 +59,14 @@ export class UserInput {
     roles?: Role[];
 }
 
-export class UserFilter extends BaseFilter implements Partial<UserInput> {
+export type UserInputData<T> = NewData<Omit<T, keyof UserBase>, UserBase>;
+
+export class UserFilter extends BaseFilter implements Partial<InputData<User>> {
     @IsEmail()
     @IsOptional()
     email?: string;
 
-    @IsPhoneNumber()
+    @IsMobilePhone()
     @IsOptional()
     mobilePhone?: string;
 
@@ -77,36 +79,17 @@ export class UserFilter extends BaseFilter implements Partial<UserInput> {
     gender?: Gender;
 }
 
-export class UserOutput extends UserInput implements BaseModel {
-    @IsInt()
-    @Min(1)
-    id: number;
-
-    @IsDate()
-    createdAt: Date;
-
-    @IsDate()
-    @IsOptional()
-    updatedAt?: Date;
-
-    @IsString()
-    @IsOptional()
-    token?: string;
-}
-
-export class UserListChunk implements ListChunk<UserOutput> {
+export class UserListChunk implements ListChunk<User> {
     @IsInt()
     @Min(0)
     count: number;
 
-    @Type(() => UserOutput)
+    @Type(() => User)
     @ValidateNested({ each: true })
-    list: UserOutput[];
+    list: User[];
 }
 
-export class SignInData
-    implements Required<Pick<UserInput, 'email' | 'password'>>
-{
+export class SignInData implements Required<Pick<User, 'email' | 'password'>> {
     @IsEmail()
     email: string;
 
@@ -116,44 +99,65 @@ export class SignInData
 
 export class SignUpData
     extends SignInData
-    implements Required<Pick<UserInput, 'name' | 'email' | 'password'>>
+    implements Required<Pick<User, 'name' | 'email' | 'password'>>
 {
     @IsString()
     name: string;
 }
 
 export interface JWTAction {
-    context?: ParameterizedContext<JsonWebTokenError | { user: UserOutput }>;
+    context?: ParameterizedContext<JsonWebTokenError | { user: User }>;
 }
 
 @Entity()
-export class User extends Base implements UserInput {
+export class User extends Base {
+    @IsString()
     @Column()
     name: string;
 
+    @IsEnum(Gender)
+    @IsOptional()
     @Column({ enum: Gender, nullable: true })
     gender?: Gender;
 
+    @IsUrl()
+    @IsOptional()
     @Column({ nullable: true })
-    avatar: string;
+    avatar?: string;
 
+    @IsEmail()
+    @IsOptional()
     @Column({ nullable: true })
     email?: string;
 
+    @IsMobilePhone()
+    @IsOptional()
     @Column({ nullable: true })
     mobilePhone?: string;
 
-    @Column({ select: false })
-    password: string;
+    @IsStrongPassword()
+    @IsOptional()
+    @Column({ nullable: true, select: false })
+    password?: string;
 
+    @IsEnum(Role, { each: true })
     @Column('simple-json')
     roles: Role[];
+
+    @IsString()
+    @IsOptional()
+    token?: string;
 }
 
-export abstract class UserBase extends Base implements UserBaseModel {
+export abstract class UserBase extends Base {
+    @Type(() => User)
+    @ValidateNested()
     @ManyToOne(() => User)
     createdBy: User;
 
+    @Type(() => User)
+    @ValidateNested()
+    @IsOptional()
     @ManyToOne(() => User)
-    updatedBy: User;
+    updatedBy?: User;
 }

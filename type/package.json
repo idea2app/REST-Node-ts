@@ -1,0 +1,10 @@
+{
+    "name": "@idea2app/rest-node-ts",
+    "version": "0.6.0",
+    "types": "index.d.ts",
+    "dependencies": {
+        "@types/jsonwebtoken": "^9.0.3",
+        "@types/koa": "^2.13.9",
+        "mobx-restful": "^0.6.11"
+    }
+}

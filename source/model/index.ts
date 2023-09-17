@@ -2,16 +2,13 @@ import { ConnectionOptions, parse } from 'pg-connection-string';
 import { DataSource } from 'typeorm';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
 
+import { DATABASE_URL, isProduct } from '../utility';
 import { User } from './User';
 
 export * from './Base';
 export * from './User';
 
-const { NODE_ENV, DATABASE_URL } = process.env;
-
-export const isProduct = NODE_ENV === 'production';
-
-const { host, port, user, password, database } = isProduct
+const { ssl, host, port, user, password, database } = isProduct
     ? parse(DATABASE_URL)
     : ({} as ConnectionOptions);
 
@@ -24,9 +21,10 @@ const commonOptions: Pick<
     migrations: [`${isProduct ? '.data' : 'migration'}/*.ts`]
 };
 
-export default isProduct
+export const dataSource = isProduct
     ? new DataSource({
           type: 'postgres',
+          ssl: ssl as boolean,
           host,
           port: +port,
           username: user,

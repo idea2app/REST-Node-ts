@@ -17,18 +17,17 @@ import {
 } from 'routing-controllers';
 import { ResponseSchema } from 'routing-controllers-openapi';
 
-import dataSource, {
+import {
+    dataSource,
     JWTAction,
     Role,
     SignInData,
     User,
     UserFilter,
     UserInput,
-    UserListChunk,
-    UserOutput
+    UserListChunk
 } from '../model';
-
-const { APP_SECRET } = process.env;
+import { APP_SECRET } from '../utility';
 
 @JsonController('/user')
 export class UserController {
@@ -48,14 +47,14 @@ export class UserController {
 
     @Get('/session')
     @Authorized()
-    @ResponseSchema(UserOutput)
-    getSession(@CurrentUser() user: UserOutput) {
+    @ResponseSchema(User)
+    getSession(@CurrentUser() user: User) {
         return user;
     }
 
     @Post('/session')
-    @ResponseSchema(UserOutput)
-    async signIn(@Body() { email, password }: SignInData): Promise<UserOutput> {
+    @ResponseSchema(User)
+    async signIn(@Body() { email, password }: SignInData): Promise<User> {
         const user = await this.store.findOne({
             where: {
                 email,
@@ -68,7 +67,7 @@ export class UserController {
     }
 
     @Post()
-    @ResponseSchema(UserOutput)
+    @ResponseSchema(User)
     async signUp(@Body() data: SignInData) {
         const sum = await this.store.count();
 
@@ -84,7 +83,7 @@ export class UserController {
 
     @Put('/:id')
     @Authorized()
-    @ResponseSchema(UserOutput)
+    @ResponseSchema(User)
     updateOne(
         @Param('id') id: number,
         @CurrentUser() { id: ID, roles }: User,
@@ -98,7 +97,7 @@ export class UserController {
 
     @Get('/:id')
     @OnNull(404)
-    @ResponseSchema(UserOutput)
+    @ResponseSchema(User)
     getOne(@Param('id') id: number) {
         return this.store.findOne({ where: { id } });
     }

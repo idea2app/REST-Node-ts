@@ -1,7 +1,6 @@
 ReadMe.md
 node_modules/
 dist/
-type/
 .data/
 start.sh
 .husky/

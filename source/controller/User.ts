@@ -24,7 +24,6 @@ import {
     SignInData,
     User,
     UserFilter,
-    UserInput,
     UserListChunk
 } from '../model';
 import { APP_SECRET } from '../utility';
@@ -87,7 +86,7 @@ export class UserController {
     updateOne(
         @Param('id') id: number,
         @CurrentUser() { id: ID, roles }: User,
-        @Body() data: UserInput
+        @Body() data: User
     ) {
         if (!roles.includes(Role.Administrator) && id !== ID)
             throw new ForbiddenError();

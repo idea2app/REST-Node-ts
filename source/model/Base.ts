@@ -40,15 +40,17 @@ export interface ListChunk<T extends Base> {
 
 export abstract class Base {
     @IsInt()
+    @IsOptional()
     @PrimaryGeneratedColumn()
     id: number;
 
     @IsDateString()
+    @IsOptional()
     @CreateDateColumn()
     createdAt: string;
 
     @IsDateString()
     @IsOptional()
     @UpdateDateColumn()
-    updatedAt?: string;
+    updatedAt: string;
 }

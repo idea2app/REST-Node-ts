@@ -22,8 +22,8 @@ jobs:
                   cache: pnpm
             - name: Install, Build & Publish
               run: |
+                  pnpm i  &&  pnpm build
                   cd type/
-                  pnpm i
                   npm publish
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

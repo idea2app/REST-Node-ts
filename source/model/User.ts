@@ -3,6 +3,7 @@ import {
     IsEmail,
     IsEnum,
     IsInt,
+    IsJWT,
     IsMobilePhone,
     IsOptional,
     IsString,
@@ -30,36 +31,7 @@ export enum Role {
     Client
 }
 
-export class UserInput implements Partial<InputData<User>> {
-    @IsString()
-    name: string;
-
-    @IsEnum(Gender)
-    @IsOptional()
-    gender?: Gender;
-
-    @IsUrl()
-    @IsOptional()
-    avatar: string;
-
-    @IsEmail()
-    @IsOptional()
-    email?: string;
-
-    @IsMobilePhone()
-    @IsOptional()
-    mobilePhone?: string;
-
-    @IsString()
-    @IsOptional()
-    password?: string;
-
-    @IsEnum(Role, { each: true })
-    @IsOptional()
-    roles?: Role[];
-}
-
-export type UserInputData<T> = NewData<Omit<T, keyof UserBase>, UserBase>;
+export type UserInputData<T> = NewData<Omit<T, keyof UserBase>, Base>;
 
 export class UserFilter extends BaseFilter implements Partial<InputData<User>> {
     @IsEmail()
@@ -141,10 +113,11 @@ export class User extends Base {
     password?: string;
 
     @IsEnum(Role, { each: true })
+    @IsOptional()
     @Column('simple-json')
     roles: Role[];
 
-    @IsString()
+    @IsJWT()
     @IsOptional()
     token?: string;
 }

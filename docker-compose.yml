@@ -29,6 +29,18 @@ services:
             - 8080:8080
         networks:
             - idea2app
+        healthcheck:
+            test: ['CMD-SHELL', 'curl -f http://localhost:8080/ || exit 1']
+            interval: 3s
+            retries: 5
+            start_period: 30s
+        labels:
+            - autoheal=true
+        restart: always
+    autoheal:
+        image: willfarrell/autoheal:1.2.0
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
         restart: always
     caddy:
         depends_on:

@@ -6,14 +6,26 @@
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)][5]
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)][6]
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)][7]
+
 ## Feature
 
-1. HTTP server: [Koa][6]
-2. Controller framework: [Routing Controllers][7]
-3. Model framework: [Class Transformer][8] & [Class Validator][9]
-4. ORM framework: [TypeORM][10]
-5. API document: [Swagger][11]
-6. Mock API: [OpenAPI backend][12]
+1. HTTP server: [Koa][8]
+2. Controller framework: [Routing Controllers][9]
+3. Model framework: [Class Transformer][10] & [Class Validator][11]
+4. ORM framework: [TypeORM][12]
+5. API document: [Swagger][13]
+6. Mock API: [OpenAPI backend][14]
+
+## Best practice
+
+1.  Install **[Settings][15] GitHub app** in your account or organization
+2.  Click the **[Use this template][16] button** on the top of this GitHub repository's home page, then create your own repository in the app-installed namespace above
+3.  Click the **[Open in GitHub codespaces][17] button** on the top of ReadMe file, then an **online VS Code development environment** will be started immediately
+4.  Recommend to add a [Notification step in GitHub actions][18] for your Team IM app
+5.  Remind the PMs & users of your product to submit **Feature/Enhancement** requests or **Bug** reports with [Issue forms][19] instead of IM messages or Mobile Phone calls
+6.  Collect all these issues into [Project kanbans][20], then create **Pull requests** & add `closes #issue_number` into its description for automation
 
 ## API Usage
 
@@ -25,7 +37,7 @@
 
 #### Sign in GitHub packages with NPM
 
-1. Generate a [PAT][13] with `read:packages` authorization
+1. Generate a [PAT][21] with `read:packages` authorization
 2. Run Sign-in command in your terminal, and use PAT as password:
 
 ```shell
@@ -62,7 +74,7 @@ pnpm i
 pnpm dev
 ```
 
-or just press <kbd>F5</kbd> key in [VS Code][14].
+or just press <kbd>F5</kbd> key in [VS Code][22].
 
 ### Migration
 
@@ -114,12 +126,20 @@ git push origin master --tags
 [3]: https://www.typescriptlang.org/
 [4]: https://github.com/idea2app/REST-Node-ts/actions/workflows/deploy-production.yml
 [5]: https://render.com/deploy
-[6]: https://koajs.com/
-[7]: https://github.com/typestack/routing-controllers
-[8]: https://github.com/typestack/class-transformer
-[9]: https://github.com/typestack/class-validator
-[10]: https://typeorm.io/
-[11]: https://swagger.io/
-[12]: https://github.com/anttiviljami/openapi-backend
-[13]: https://github.com/settings/tokens
-[14]: https://code.visualstudio.com/
+[6]: https://codespaces.new/idea2app/REST-Node-ts
+[7]: https://gitpod.io/?autostart=true#https://github.com/idea2app/REST-Node-ts
+[8]: https://koajs.com/
+[9]: https://github.com/typestack/routing-controllers
+[10]: https://github.com/typestack/class-transformer
+[11]: https://github.com/typestack/class-validator
+[12]: https://typeorm.io/
+[13]: https://swagger.io/
+[14]: https://github.com/anttiviljami/openapi-backend
+[15]: https://github.com/apps/settings
+[16]: https://github.com/new?template_name=REST-Node-ts&template_owner=idea2app
+[17]: https://codespaces.new/idea2app/REST-Node-ts
+[18]: https://github.com/kaiyuanshe/kaiyuanshe.github.io/blob/bb4675a56bf1d6b207231313da5ed0af7cf0ebd6/.github/workflows/pull-request.yml#L32-L56
+[19]: https://github.com/idea2app/REST-Node-ts/issues/new/choose
+[20]: https://github.com/idea2app/REST-Node-ts/projects
+[21]: https://github.com/settings/tokens
+[22]: https://code.visualstudio.com/

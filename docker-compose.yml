@@ -12,8 +12,6 @@ services:
             - POSTGRES_PASSWORD=${APP_SECRET}
         volumes:
             - database-data:/var/lib/postgresql/data/
-        ports:
-            - 5432:5432
         networks:
             - idea2app
         restart: always
@@ -25,8 +23,6 @@ services:
             - NODE_ENV=production
             - DATABASE_URL=postgres://postgres:${APP_SECRET}@postgres:5432/postgres
             - PORT=8080
-        ports:
-            - 8080:8080
         networks:
             - idea2app
         healthcheck:

@@ -1,6 +1,6 @@
 {
     "name": "@idea2app/rest-node-ts",
-    "version": "0.6.0",
+    "version": "0.7.0",
     "types": "index.d.ts",
     "dependencies": {
         "@types/jsonwebtoken": "^9.0.5",

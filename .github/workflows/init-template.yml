@@ -2,7 +2,7 @@ name: Template Repository initialization
 on:
     push:
         branches:
-            - main
+            - master
 env:
     TEMPLATE_OWNER: idea2app
     TEMPLATE_NAME: REST-Node-ts

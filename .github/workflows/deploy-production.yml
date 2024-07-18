@@ -9,8 +9,8 @@ on:
             - v*
 env:
     ARTIFACT_PATH: /tmp/artifact.tar
-    BOX_NAME: rest-node-ts
-    BOX_URL: idea2app/rest-node-ts
+    BOX_NAME: ${{ github.event.repository.name }}
+    BOX_URL: ${{ github.repository }}
     HOST: ${{ secrets.HOST }}
 
 jobs:
@@ -25,6 +25,8 @@ jobs:
 
             - name: Inject Environment variables
               run: |
+                  echo "BOX_NAME=${BOX_NAME@L}" >> "${GITHUB_ENV}"
+                  echo "BOX_URL=${BOX_URL@L}" >> "${GITHUB_ENV}"
                   cat > .env <<EOF
                   ${{ secrets.ENV_FILE }}
                   EOF

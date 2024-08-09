@@ -14,8 +14,9 @@ const { ssl, host, port, user, password, database } = isProduct
 
 const commonOptions: Pick<
     SqliteConnectionOptions,
-    'synchronize' | 'entities' | 'migrations'
+    'logging' | 'synchronize' | 'entities' | 'migrations'
 > = {
+    logging: true,
     synchronize: true,
     entities: [User],
     migrations: [`${isProduct ? '.data' : 'migration'}/*.ts`]
@@ -30,12 +31,10 @@ export const dataSource = isProduct
           username: user,
           password,
           database,
-          logging: true,
           ...commonOptions
       })
     : new DataSource({
           type: 'sqlite',
           database: '.data/test.db',
-          logging: false,
           ...commonOptions
       });

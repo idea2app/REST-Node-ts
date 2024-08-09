@@ -2,13 +2,13 @@ services:
     - type: web
       name: rest-node-ts-server
       plan: free
-      env: node
+      runtime: node
       buildCommand: npm install  &&  npm run build
       startCommand: npm start
       healthCheckPath: /_health
       envVars:
           - key: NODE_VERSION
-            value: 14.19.0
+            value: 18.20.4
           - key: NODE_ENV
             value: production
           - key: DATABASE_URL

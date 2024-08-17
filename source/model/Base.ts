@@ -9,6 +9,7 @@ import {
 import { NewData } from 'mobx-restful';
 import {
     CreateDateColumn,
+    DeleteDateColumn,
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from 'typeorm';
@@ -33,7 +34,7 @@ export class BaseFilter {
     keywords?: string;
 }
 
-export interface ListChunk<T extends Base> {
+export interface ListChunk<T> {
     count: number;
     list: T[];
 }
@@ -53,4 +54,9 @@ export abstract class Base {
     @IsOptional()
     @UpdateDateColumn()
     updatedAt: string;
+
+    @IsDateString()
+    @IsOptional()
+    @DeleteDateColumn()
+    deletedAt?: string;
 }

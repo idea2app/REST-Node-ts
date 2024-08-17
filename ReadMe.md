@@ -40,25 +40,7 @@
 -   Entry: http://localhost:8080/
 -   Document: http://localhost:8080/docs/
 -   Schema: http://localhost:8080/docs/spec/
-
-### Type package
-
-#### Sign in GitHub packages with NPM
-
-1. Generate a [PAT][22] with `read:packages` authorization
-2. Run Sign-in command in your terminal, and use PAT as password:
-
-```shell
-npm login --scope=@your-org --registry=https://npm.pkg.github.com
-```
-
-#### Installation
-
-```shell
-npm i pnpm -g
-
-pnpm i @idea2app/rest-node-ts -D
-```
+-   Type: https://github.com/idea2app/REST-Node-ts/pkgs/npm/rest-node-ts
 
 ## Environment variables
 
@@ -117,7 +99,7 @@ pnpm container
 
 ```shell
 git checkout master
-git tag v0.7.0  # this version tag comes from ./package.json
+git tag v0.9.0  # this version tag comes from ./package.json
 git push origin master --tags
 ```
 
@@ -125,7 +107,7 @@ git push origin master --tags
 
 ```shell
 git checkout master
-git tag type-v0.7.0  # this version tag comes from ./type/package.json
+git tag type-v0.9.0  # this version tag comes from ./type/package.json
 git push origin master --tags
 ```
 

@@ -4,7 +4,7 @@
 
 ### 1. Sign in GitHub packages with NPM
 
-1. Generate a PAT with `read:packages` authorization
+1. Generate a [PAT][1] with `read:packages` authorization
 2. Run Sign-in command in your terminal, and use PAT as password:
     ```shell
     npm login --scope=@idea2app --registry=https://npm.pkg.github.com
@@ -17,3 +17,5 @@ npm i pnpm -g
 
 pnpm i @idea2app/rest-node-ts -D
 ```
+
+[1]: https://github.com/settings/tokens

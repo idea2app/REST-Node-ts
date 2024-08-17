@@ -8,6 +8,7 @@ import { ActivityLog } from './ActivityLog';
 
 export * from './Base';
 export * from './User';
+export * from './OAuth';
 export * from './ActivityLog';
 
 const { ssl, host, port, user, password, database } = isProduct

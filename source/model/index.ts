@@ -4,9 +4,11 @@ import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionO
 
 import { DATABASE_URL, isProduct } from '../utility';
 import { User } from './User';
+import { ActivityLog } from './ActivityLog';
 
 export * from './Base';
 export * from './User';
+export * from './ActivityLog';
 
 const { ssl, host, port, user, password, database } = isProduct
     ? parse(DATABASE_URL)
@@ -18,7 +20,7 @@ const commonOptions: Pick<
 > = {
     logging: true,
     synchronize: true,
-    entities: [User],
+    entities: [User, ActivityLog],
     migrations: [`${isProduct ? '.data' : 'migration'}/*.ts`]
 };
 

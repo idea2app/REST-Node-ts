@@ -125,6 +125,7 @@ export class User extends Base {
 export abstract class UserBase extends Base {
     @Type(() => User)
     @ValidateNested()
+    @IsOptional()
     @ManyToOne(() => User)
     createdBy: User;
 
@@ -133,4 +134,10 @@ export abstract class UserBase extends Base {
     @IsOptional()
     @ManyToOne(() => User)
     updatedBy?: User;
+
+    @Type(() => User)
+    @ValidateNested()
+    @IsOptional()
+    @ManyToOne(() => User)
+    deletedBy?: User;
 }

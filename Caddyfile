@@ -1,0 +1,7 @@
+example.com {
+    reverse_proxy rest-node-ts:8080
+}
+
+dashpress.example.com {
+    reverse_proxy dashpress:3000
+}

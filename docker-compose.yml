@@ -33,6 +33,25 @@ services:
         labels:
             - autoheal=true
         restart: always
+    dashpress:
+        depends_on:
+            - postgres
+            - rest-node-ts
+        image: luojiyin/dashpress:1.0
+        volumes:
+            - ./dashpress/app:/app
+        ports:
+            - 8081:3000
+        networks:
+            - idea2app
+        healthcheck:
+            test: ['CMD-SHELL', 'curl -f http://localhost:3000/ || exit 1']
+            interval: 3s
+            retries: 5
+            start_period: 30s
+        labels:
+            - autoheal=true
+        restart: always
     autoheal:
         image: willfarrell/autoheal:1.2.0
         volumes:
@@ -48,4 +67,5 @@ services:
         networks:
             - idea2app
         restart: always
-        command: caddy reverse-proxy --from example.com --to rest-node-ts:8080
+        volumes:
+            - ./Caddyfile:/etc/caddy/Caddyfile  

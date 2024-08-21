@@ -67,4 +67,5 @@ services:
         networks:
             - idea2app
         restart: always
-        command: caddy reverse-proxy --from example.com --to rest-node-ts:8080
+        volumes:
+            - ./Caddyfile:/etc/caddy/Caddyfile  

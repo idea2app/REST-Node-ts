@@ -17,31 +17,32 @@
 4. ORM framework: [TypeORM][12]
 5. API document: [Swagger][13]
 6. Mock API: [OpenAPI backend][14]
+7. Test framework: [Jest][15]
 
 ## Major features
 
 1. [API entry & Health checking](source/controller/Base.ts)
 2. [User & Session](source/controller/User.ts)
 3. [OAuth sign in](source/controller/OAuth.ts)
-    - recommend to use with [Next SSR middleware][15]
+    - recommend to use with [Next SSR middleware][16]
 4. [Activity logging](source/controller/ActivityLog.ts)
 
 ## Best practice
 
 1.  Install GitHub apps in your organization or account:
 
-    1.  [Probot settings][16]: set up Issue labels & Pull Request rules
-    2.  [PR badge][17]: set up Online [VS Code][18] editor entries in Pull Request description
+    1.  [Probot settings][17]: set up Issue labels & Pull Request rules
+    2.  [PR badge][18]: set up Online [VS Code][19] editor entries in Pull Request description
 
-2.  Click the **[<kbd>Use this template</kbd>][19] button** on the top of this GitHub repository's home page, then create your own repository in the app-installed namespace above
+2.  Click the **[<kbd>Use this template</kbd>][20] button** on the top of this GitHub repository's home page, then create your own repository in the app-installed namespace above
 
 3.  Click the **[<kbd>Open in GitHub codespaces</kbd>][8] button** on the top of ReadMe file, then an **online VS Code development environment** will be started immediately
 
-4.  Recommend to add a [Notification step in GitHub actions][20] for your Team IM app
+4.  Recommend to add a [Notification step in GitHub actions][21] for your Team IM app
 
-5.  Remind the PMs & users of your product to submit **Feature/Enhancement** requests or **Bug** reports with [Issue forms][21] instead of IM messages or Mobile Phone calls
+5.  Remind the PMs & users of your product to submit **Feature/Enhancement** requests or **Bug** reports with [Issue forms][22] instead of IM messages or Mobile Phone calls
 
-6.  Collect all these issues into [Project kanbans][22], then create **Pull requests** & add `closes #issue_number` into its description for automation
+6.  Collect all these issues into [Project kanbans][23], then create **Pull requests** & add `closes #issue_number` into its description for automation
 
 ## API Usage
 
@@ -72,7 +73,7 @@ pnpm i
 pnpm dev
 ```
 
-or just press <kbd>F5</kbd> key in [VS Code][18].
+or just press <kbd>F5</kbd> key in [VS Code][19].
 
 ### Migration
 
@@ -107,7 +108,7 @@ pnpm container
 
 ```shell
 git checkout master
-git tag v0.9.0  # this version tag comes from ./package.json
+git tag v1.0.0  # this version tag comes from ./package.json
 git push origin master --tags
 ```
 
@@ -115,7 +116,7 @@ git push origin master --tags
 
 ```shell
 git checkout master
-git tag type-v0.9.0  # this version tag comes from ./type/package.json
+git tag type-v1.0.0  # this version tag comes from ./type/package.json
 git push origin master --tags
 ```
 
@@ -133,11 +134,12 @@ git push origin master --tags
 [12]: https://typeorm.io/
 [13]: https://swagger.io/
 [14]: https://github.com/anttiviljami/openapi-backend
-[15]: https://github.com/idea2app/Next-SSR-middleware
-[16]: https://github.com/apps/settings
-[17]: https://pullrequestbadge.com/
-[17]: https://code.visualstudio.com/
-[19]: https://github.com/new?template_name=REST-Node-ts&template_owner=idea2app
-[20]: https://github.com/kaiyuanshe/kaiyuanshe.github.io/blob/bb4675a56bf1d6b207231313da5ed0af7cf0ebd6/.github/workflows/pull-request.yml#L32-L56
-[21]: https://github.com/idea2app/REST-Node-ts/issues/new/choose
-[22]: https://github.com/idea2app/REST-Node-ts/projects
+[15]: https://jestjs.io/
+[16]: https://github.com/idea2app/Next-SSR-middleware
+[17]: https://github.com/apps/settings
+[18]: https://pullrequestbadge.com/
+[19]: https://code.visualstudio.com/
+[20]: https://github.com/new?template_name=REST-Node-ts&template_owner=idea2app
+[21]: https://github.com/kaiyuanshe/kaiyuanshe.github.io/blob/bb4675a56bf1d6b207231313da5ed0af7cf0ebd6/.github/workflows/pull-request.yml#L32-L56
+[22]: https://github.com/idea2app/REST-Node-ts/issues/new/choose
+[23]: https://github.com/idea2app/REST-Node-ts/projects

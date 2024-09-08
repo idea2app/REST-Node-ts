@@ -1,6 +1,6 @@
 # Reference: https://pnpm.io/docker#example-1-build-a-bundle-in-a-docker-container
 
-FROM node:18-slim AS base
+FROM node:20-slim AS base
 RUN apt-get update && \
     apt-get install curl -y --no-install-recommends
 ENV PNPM_HOME="/pnpm"

@@ -1,14 +1,9 @@
 import { marked } from 'marked';
-import {
-    Get,
-    HeaderParam,
-    HttpCode,
-    JsonController
-} from 'routing-controllers';
+import { Controller, Get, HeaderParam, HttpCode } from 'routing-controllers';
 
 import { isProduct } from '../utility';
 
-@JsonController()
+@Controller()
 export class BaseController {
     static entryOf(host: string) {
         host = 'http://' + host;
@@ -29,6 +24,6 @@ ${isProduct ? '' : `- Mock API served at ${host}/mock/`}
 
     @Get()
     getIndex(@HeaderParam('host') host: string) {
-        return `<pre>${marked(BaseController.entryOf(host))}</pre>`;
+        return marked(BaseController.entryOf(host));
     }
 }

@@ -2,7 +2,13 @@ import { FindOptionsWhere, Like } from 'typeorm';
 
 import { Base } from './model';
 
-export const { NODE_ENV, PORT = 8080, DATABASE_URL, APP_SECRET } = process.env;
+export const {
+    NODE_ENV,
+    HTTP_PROXY,
+    PORT = 8080,
+    DATABASE_URL,
+    APP_SECRET
+} = process.env;
 
 export const isProduct = NODE_ENV === 'production';
 

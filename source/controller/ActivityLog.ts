@@ -1,5 +1,6 @@
-import { Get, JsonController, QueryParams } from 'routing-controllers';
+import { Get, JsonController, Param, QueryParams } from 'routing-controllers';
 import { ResponseSchema } from 'routing-controllers-openapi';
+import { FindOptionsWhere } from 'typeorm';
 
 import {
     ActivityLog,
@@ -7,6 +8,7 @@ import {
     ActivityLogListChunk,
     BaseFilter,
     dataSource,
+    LogableTable,
     Operation,
     User,
     UserRank,
@@ -66,17 +68,37 @@ export class ActivityLogController {
         return { list, count };
     }
 
-    @Get()
+    @Get('/user/:id')
     @ResponseSchema(ActivityLogListChunk)
-    async getList({
-        operation,
-        tableName,
-        recordId,
-        pageSize,
-        pageIndex
-    }: ActivityLogFilter) {
+    getUserList(
+        @Param('id') id: number,
+        @QueryParams() { operation, pageSize, pageIndex }: ActivityLogFilter
+    ) {
+        return this.queryList(
+            { operation, createdBy: { id } },
+            { pageSize, pageIndex }
+        );
+    }
+
+    @Get('/:table/:id')
+    @ResponseSchema(ActivityLogListChunk)
+    getList(
+        @Param('table') tableName: keyof typeof LogableTable,
+        @Param('id') recordId: number,
+        @QueryParams() { operation, pageSize, pageIndex }: ActivityLogFilter
+    ) {
+        return this.queryList(
+            { operation, tableName, recordId },
+            { pageSize, pageIndex }
+        );
+    }
+
+    async queryList(
+        where: FindOptionsWhere<ActivityLog>,
+        { pageSize, pageIndex }: BaseFilter
+    ) {
         const [list, count] = await store.findAndCount({
-            where: { operation, tableName, recordId },
+            where,
             relations: ['createdBy'],
             skip: pageSize * (pageIndex - 1),
             take: pageSize

@@ -141,3 +141,18 @@ export abstract class UserBase extends Base {
     @ManyToOne(() => User)
     deletedBy?: User;
 }
+
+export class UserBaseFilter
+    extends BaseFilter
+    implements Partial<InputData<UserBase>>
+{
+    @IsInt()
+    @Min(1)
+    @IsOptional()
+    createdBy?: number;
+
+    @IsInt()
+    @Min(1)
+    @IsOptional()
+    updatedBy?: number;
+}

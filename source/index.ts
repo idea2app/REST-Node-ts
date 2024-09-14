@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { config } from 'dotenv';
+import { ProxyAgent, setGlobalDispatcher } from 'undici';
 
 config({ path: [`.env.${process.env.NODE_ENV}.local`, '.env.local', '.env'] });
 
@@ -11,12 +12,14 @@ import { useKoaServer } from 'routing-controllers';
 import {
     BaseController,
     mocker,
-    router,
+    controllers,
     swagger,
     UserController
 } from './controller';
 import { dataSource } from './model';
-import { APP_SECRET, isProduct, PORT } from './utility';
+import { HTTP_PROXY, isProduct, APP_SECRET, PORT } from './utility';
+
+if (HTTP_PROXY) setGlobalDispatcher(new ProxyAgent(HTTP_PROXY));
 
 const HOST = `localhost:${PORT}`,
     app = new Koa()
@@ -27,7 +30,7 @@ const HOST = `localhost:${PORT}`,
 if (!isProduct) app.use(mocker());
 
 useKoaServer(app, {
-    ...router,
+    controllers,
     cors: true,
     authorizationChecker: action => !!UserController.getSession(action),
     currentUserChecker: UserController.getSession

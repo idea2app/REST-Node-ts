@@ -12,12 +12,13 @@ export * from './User';
 export * from './OAuth';
 export * from './ActivityLog';
 
+export const controllers = [
+    OauthController,
+    UserController,
+    ActivityLogController,
+    BaseController
+];
 export const { swagger, mocker, router } = createAPI({
     mock: !isProduct,
-    controllers: [
-        OauthController,
-        UserController,
-        ActivityLogController,
-        BaseController
-    ]
+    controllers
 });

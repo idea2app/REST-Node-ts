@@ -18,7 +18,8 @@ export enum Operation {
     Delete = 'delete'
 }
 
-const LogableTable = { User };
+export const LogableTable = { User };
+
 const LogableTableEnum = Object.fromEntries(
     Object.entries(LogableTable).map(([key]) => [key, key])
 );
@@ -50,15 +51,6 @@ export class ActivityLogFilter
     @IsEnum(Operation)
     @IsOptional()
     operation?: Operation;
-
-    @IsEnum(LogableTableEnum)
-    @IsOptional()
-    tableName?: keyof typeof LogableTable;
-
-    @IsInt()
-    @Min(1)
-    @IsOptional()
-    recordId?: number;
 }
 
 export class ActivityLogListChunk implements ListChunk<ActivityLog> {

@@ -1,5 +1,5 @@
 import { githubClient, User as GitHubUser } from 'mobx-github';
-import { Body, JsonController, Post } from 'routing-controllers';
+import { Body, HttpCode, JsonController, Post } from 'routing-controllers';
 import { ResponseSchema } from 'routing-controllers-openapi';
 import { isDeepStrictEqual } from 'util';
 
@@ -12,6 +12,7 @@ const store = dataSource.getRepository(User);
 @JsonController('/user/OAuth')
 export class OauthController {
     @Post('/GitHub')
+    @HttpCode(201)
     @ResponseSchema(User)
     async signInWithGithub(@Body() { accessToken }: OAuthSignInData) {
         const { body } = await githubClient.get<GitHubUser>('user', {

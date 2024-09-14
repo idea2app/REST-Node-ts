@@ -1,4 +1,4 @@
-import { FindOptionsWhere, Like } from 'typeorm';
+import { FindOptionsWhere, ILike } from 'typeorm';
 
 import { Base } from './model';
 
@@ -18,5 +18,5 @@ export const searchConditionOf = <T extends Base>(
     filter?: FindOptionsWhere<T>
 ) =>
     keywords
-        ? keys.map(key => ({ [key]: Like(`%${keywords}%`), ...filter }))
+        ? keys.map(key => ({ [key]: ILike(`%${keywords}%`), ...filter }))
         : filter;

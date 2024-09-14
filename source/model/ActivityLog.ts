@@ -19,6 +19,7 @@ export enum Operation {
 }
 
 export const LogableTable = { User };
+
 const LogableTableEnum = Object.fromEntries(
     Object.entries(LogableTable).map(([key]) => [key, key])
 );

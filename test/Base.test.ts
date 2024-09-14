@@ -1,8 +1,8 @@
-import { client } from './shared';
+import { httpClient } from './shared';
 
 describe('Base controller', () => {
     it('should echo Server entries in HTML', async () => {
-        const { body } = await client.get<string>(
+        const { body } = await httpClient.get<string>(
             '/',
             {},
             { responseType: 'text' }
@@ -19,7 +19,7 @@ describe('Base controller', () => {
     });
 
     it('should echo a Health heart beat', async () => {
-        const { status, body } = await client.get<string>(
+        const { status, body } = await httpClient.get<string>(
             '/_health',
             {},
             { responseType: 'text' }

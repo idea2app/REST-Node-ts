@@ -20,7 +20,7 @@
     "dependencies": {
         "@koa/cors": "^5.0.0",
         "@koa/multer": "^3.0.2",
-        "@koa/router": "^13.0.1",
+        "@koa/router": "^13.1.0",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.1",
         "cross-env": "^7.0.3",
@@ -36,38 +36,43 @@
         "marked": "^14.1.2",
         "mobx-github": "^0.3.4",
         "mobx-restful": "^1.0.1",
-        "pg": "^8.12.0",
-        "pg-connection-string": "^2.6.4",
+        "pg": "^8.13.0",
+        "pg-connection-string": "^2.7.0",
         "reflect-metadata": "^0.2.2",
         "routing-controllers": "^0.10.4",
         "routing-controllers-openapi": "^4.0.0",
         "tslib": "^2.7.0",
-        "typeorm": "npm:@helveg/typeorm@^0.3.20",
-        "undici": "^6.19.8",
-        "web-utility": "^4.4.0"
+        "typeorm": "npm:@helveg/typeorm@^0.3.21",
+        "undici": "^6.20.1",
+        "web-utility": "^4.4.1"
     },
     "devDependencies": {
+        "@eslint/js": "^9.12.0",
         "@octokit/openapi-types": "^22.2.0",
+        "@tech_query/node-toolkit": "^2.0.0-alpha.0",
+        "@types/eslint-config-prettier": "^6.11.3",
+        "@types/eslint__js": "^8.42.3",
         "@types/jest": "^29.5.13",
-        "@types/jsonwebtoken": "^9.0.6",
+        "@types/jsonwebtoken": "^9.0.7",
         "@types/koa": "^2.15.0",
         "@types/koa-logger": "^3.1.5",
-        "@types/node": "^20.16.5",
-        "@typescript-eslint/eslint-plugin": "^8.5.0",
-        "@typescript-eslint/parser": "^8.5.0",
-        "eslint": "^8.57.0",
+        "@types/node": "^20.16.11",
+        "eslint": "^9.12.0",
+        "eslint-config-prettier": "^9.1.0",
         "eslint-plugin-simple-import-sort": "^12.1.1",
+        "globals": "^15.11.0",
         "husky": "^9.1.6",
         "jest": "^29.7.0",
         "koajax": "^3.0.2",
         "lint-staged": "^15.2.10",
         "prettier": "^3.3.3",
         "sqlite3": "^5.1.7",
-        "start-server-and-test": "^2.0.7",
+        "start-server-and-test": "^2.0.8",
         "swagger-typescript-api": "^13.0.22",
         "ts-jest": "^29.2.5",
         "ts-node": "^10.9.2",
-        "typescript": "~5.6.2"
+        "typescript": "~5.6.3",
+        "typescript-eslint": "^8.9.0"
     },
     "resolutions": {
         "native-file-system-adapter": "npm:@tech_query/native-file-system-adapter@^3.0.1"
@@ -79,7 +84,8 @@
         "tabWidth": 4
     },
     "lint-staged": {
-        "*.{md,json,yml,ts}": "prettier --write"
+        "*.{md,json,yml,mjs,ts}": "prettier --write",
+        "*.ts": "eslint --fix"
     },
     "jest": {
         "preset": "ts-jest"

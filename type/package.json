@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "types": "index.d.ts",
     "dependencies": {
-        "@types/jsonwebtoken": "^9.0.6",
+        "@types/jsonwebtoken": "^9.0.7",
         "@types/koa": "^2.15.0",
         "mobx-github": "^0.3.4",
         "mobx-restful": "^1.0.1"

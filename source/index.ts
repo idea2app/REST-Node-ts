@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+
 import { config } from 'dotenv';
 import { ProxyAgent, setGlobalDispatcher } from 'undici';
 
@@ -11,13 +12,13 @@ import { useKoaServer } from 'routing-controllers';
 
 import {
     BaseController,
-    mocker,
     controllers,
+    mocker,
     swagger,
     UserController
 } from './controller';
 import { dataSource } from './model';
-import { HTTP_PROXY, isProduct, APP_SECRET, PORT } from './utility';
+import { APP_SECRET, HTTP_PROXY, isProduct, PORT } from './utility';
 
 if (HTTP_PROXY) setGlobalDispatcher(new ProxyAgent(HTTP_PROXY));
 

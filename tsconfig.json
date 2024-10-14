@@ -1,11 +1,12 @@
 {
     "compilerOptions": {
-        "target": "ES2017",
+        "target": "ES2022",
         "module": "CommonJS",
         "moduleResolution": "Node",
         "esModuleInterop": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
+        "preserveSymlinks": true,
         "declaration": true,
         "importHelpers": true,
         "skipLibCheck": true,

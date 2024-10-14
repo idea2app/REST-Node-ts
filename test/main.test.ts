@@ -2,14 +2,14 @@ import { Operation } from '../source/model';
 import { HttpResponse, User } from './client';
 import { client } from './shared';
 
-var platformAdmin: User, commonUser: User;
+let platformAdmin: User, commonUser: User;
 
 describe('Main business logic', () => {
     it('should response 401 error with invalid token', async () => {
         try {
             await client.user.userControllerGetSession();
         } catch (error) {
-            expect((error as HttpResponse<any>).status).toBe(401);
+            expect((error as HttpResponse<{}>).status).toBe(401);
         }
     });
 

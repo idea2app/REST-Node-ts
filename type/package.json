@@ -5,7 +5,7 @@
     "dependencies": {
         "@types/jsonwebtoken": "^9.0.7",
         "@types/koa": "^2.15.0",
-        "mobx-github": "^0.3.4",
-        "mobx-restful": "^1.0.1"
+        "mobx-github": "^0.3.5",
+        "mobx-restful": "^2.0.0"
     }
 }

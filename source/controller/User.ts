@@ -8,6 +8,7 @@ import {
     ForbiddenError,
     Get,
     HttpCode,
+    HttpError,
     JsonController,
     OnNull,
     OnUndefined,
@@ -27,7 +28,7 @@ import {
     UserFilter,
     UserListChunk
 } from '../model';
-import { APP_SECRET, searchConditionOf } from '../utility';
+import { APP_SECRET, searchConditionOf, supabase } from '../utility';
 import { ActivityLogController } from './ActivityLog';
 
 const store = dataSource.getRepository(User);
@@ -60,8 +61,16 @@ export class UserController {
 
     static getSession({ context: { state } }: JWTAction) {
         return state instanceof JsonWebTokenError
-            ? console.error(state)
+            ? (console.error(state), null)
             : state.user;
+    }
+
+    @Post('/session/email/:email/OTP')
+    @OnUndefined(204)
+    async sendEmailOTP(@Param('email') email: string) {
+        const { error } = await supabase.auth.signInWithOtp({ email });
+
+        if (error) throw new HttpError(error.status, error.message);
     }
 
     @Get('/session')
@@ -75,12 +84,23 @@ export class UserController {
     @HttpCode(201)
     @ResponseSchema(User)
     async signIn(@Body() { email, password }: SignInData): Promise<User> {
-        const user = await store.findOneBy({
+        let user = await store.findOneBy({
             email,
             password: UserController.encrypt(password)
         });
-        if (!user) throw new ForbiddenError();
 
+        if (!user) {
+            const { error, data } = await supabase.auth.verifyOtp({
+                type: 'email',
+                email,
+                token: password
+            });
+            if (error) throw new HttpError(error.status, error.message);
+
+            user =
+                (await store.findOneBy({ email })) ||
+                (await this.signUp({ email, password: data.user.id }));
+        }
         return UserController.sign(user);
     }
 

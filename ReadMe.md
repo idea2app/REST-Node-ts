@@ -46,17 +46,24 @@
 
 ## API Usage
 
--   Entry: http://localhost:8080/
--   Document: http://localhost:8080/docs/
--   Schema: http://localhost:8080/docs/spec/
--   Type: https://github.com/idea2app/REST-Node-ts/pkgs/npm/rest-node-ts
+- Entry: http://localhost:8080/
+- Document: http://localhost:8080/docs/
+- Schema: http://localhost:8080/docs/spec/
+- Type: https://github.com/idea2app/REST-Node-ts/pkgs/npm/rest-node-ts
 
 ## Environment variables
 
-|      Name      |            Usage             |
-| :------------: | :--------------------------: |
-|  `APP_SECRET`  |   encrypt Password & Token   |
-| `DATABASE_URL` | PostgreSQL connection string |
+|            Name            |            Usage             |
+| :------------------------: | :--------------------------: |
+|        `APP_SECRET`        |   encrypt Password & Token   |
+|       `DATABASE_URL`       | PostgreSQL connection string |
+|   `SUPABASE_PROJECT_URL`   |  [Supabase][24] project URL  |
+|    `SUPABASE_ANON_KEY`     |      Supabase anon key       |
+|     `AWS_S3_END_POINT`     |  [AWS S3][25] endpoint URL   |
+|      `AWS_S3_BUCKET`       |      AWS S3 bucket name      |
+|   `AWS_S3_ACCESS_KEY_ID`   |     AWS S3 access key id     |
+| `AWS_S3_SECRET_ACCESS_KEY` |   AWS S3 secret access key   |
+|    `AWS_S3_PUBLIC_HOST`    |      AWS S3 public host      |
 
 ## Development
 
@@ -143,3 +150,5 @@ git push origin master --tags
 [21]: https://github.com/kaiyuanshe/kaiyuanshe.github.io/blob/bb4675a56bf1d6b207231313da5ed0af7cf0ebd6/.github/workflows/pull-request.yml#L32-L56
 [22]: https://github.com/idea2app/REST-Node-ts/issues/new/choose
 [23]: https://github.com/idea2app/REST-Node-ts/projects
+[24]: https://supabase.com/
+[25]: https://aws.amazon.com/s3/

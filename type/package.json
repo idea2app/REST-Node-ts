@@ -3,9 +3,9 @@
     "version": "1.0.0",
     "types": "index.d.ts",
     "dependencies": {
-        "@types/jsonwebtoken": "^9.0.7",
+        "@types/jsonwebtoken": "^9.0.9",
         "@types/koa": "^2.15.0",
         "mobx-github": "^0.3.5",
-        "mobx-restful": "^2.0.0"
+        "mobx-restful": "^2.1.0"
     }
 }

@@ -2,6 +2,7 @@ ReadMe.md
 node_modules/
 dist/
 .*/
+!.npmrc
 start.sh
-.eslintrc.json
+eslint.config.mjs
 *.pem

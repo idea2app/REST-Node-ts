@@ -11,6 +11,7 @@ import { Column, Entity, ViewColumn, ViewEntity } from 'typeorm';
 
 import { Base, BaseFilter, InputData, ListChunk } from './Base';
 import { User, UserBase } from './User';
+import { UserCredential } from './WebAuthn';
 
 export enum Operation {
     Create = 'create',
@@ -18,7 +19,7 @@ export enum Operation {
     Delete = 'delete'
 }
 
-export const LogableTable = { User };
+export const LogableTable = { User, UserCredential };
 
 const LogableTableEnum = Object.fromEntries(
     Object.entries(LogableTable).map(([key]) => [key, key])

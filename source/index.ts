@@ -1,14 +1,10 @@
 import 'reflect-metadata';
 
-import { config } from 'dotenv';
-import { ProxyAgent, setGlobalDispatcher } from 'undici';
-
-config({ path: [`.env.${process.env.NODE_ENV}.local`, '.env.local', '.env'] });
-
 import Koa from 'koa';
 import jwt from 'koa-jwt';
 import KoaLogger from 'koa-logger';
 import { useKoaServer } from 'routing-controllers';
+import { ProxyAgent, setGlobalDispatcher } from 'undici';
 
 import {
     BaseController,

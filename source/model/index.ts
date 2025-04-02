@@ -3,13 +3,16 @@ import { DataSource } from 'typeorm';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
 
 import { DATABASE_URL, isProduct } from '../utility';
-import { User } from './User';
 import { ActivityLog } from './ActivityLog';
+import { User } from './User';
+import { UserCredential } from './WebAuthn';
 
-export * from './Base';
-export * from './User';
-export * from './OAuth';
 export * from './ActivityLog';
+export * from './Base';
+export * from './File';
+export * from './OAuth';
+export * from './User';
+export * from './WebAuthn';
 
 const { ssl, host, port, user, password, database } = isProduct
     ? parse(DATABASE_URL)
@@ -21,7 +24,7 @@ const commonOptions: Pick<
 > = {
     logging: true,
     synchronize: true,
-    entities: [User, ActivityLog],
+    entities: [User, UserCredential, ActivityLog],
     migrations: [`${isProduct ? '.data' : 'migration'}/*.ts`]
 };
 

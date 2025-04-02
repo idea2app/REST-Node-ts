@@ -1,6 +1,6 @@
 {
     "name": "@idea2app/rest-node-ts",
-    "version": "1.0.0",
+    "version": "1.2.0",
     "license": "LGPL-3.0",
     "author": "shiy2008@gmail.com",
     "description": "RESTful API service scaffold based on Node.js & TypeScript",
@@ -18,9 +18,15 @@
         "node": ">=22"
     },
     "dependencies": {
+        "@aws-sdk/client-s3": "^3.779.0",
+        "@aws-sdk/s3-request-presigner": "^3.779.0",
         "@koa/cors": "^5.0.0",
         "@koa/multer": "^3.1.0",
         "@koa/router": "^13.1.0",
+        "@passwordless-id/webauthn": "^2.3.0",
+        "@smithy/smithy-client": "^4.1.6",
+        "@supabase/auth-js": "^2.69.1",
+        "@supabase/supabase-js": "^2.49.4",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.1",
         "cross-env": "^7.0.3",
@@ -95,6 +101,7 @@
         "preset": "ts-jest"
     },
     "scripts": {
+        "install": "mv .env.example .env  ||  true",
         "prepare": "husky || true",
         "dev": "cross-env TS_NODE_TRANSPILE_ONLY=true  node -r ts-node/register --watch source/",
         "lint": "lint-staged",

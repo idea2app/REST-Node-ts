@@ -1,4 +1,4 @@
-# Open Hackathon Platform - Type package
+# REST-Node-ts - Type package
 
 ## Usage
 

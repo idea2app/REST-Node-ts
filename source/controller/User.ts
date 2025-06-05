@@ -59,11 +59,10 @@ export class UserController {
         return user;
     }
 
-    static getSession({ context: { state } }: JWTAction) {
-        return state instanceof JsonWebTokenError
-            ? (console.error(state), null)
-            : state.user;
-    }
+    static getSession = ({ context: { state } }: JWTAction) =>
+        'user' in state
+            ? state.user
+            : (console.error(state.jwtOriginalError), null);
 
     @Post('/session/email/:email/OTP')
     @OnUndefined(204)

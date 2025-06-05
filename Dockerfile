@@ -5,7 +5,7 @@ RUN apt-get update && \
     apt-get install curl -y --no-install-recommends
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN npm i pnpm@^9 -g
+RUN npm i pnpm@latest -g
 COPY . /app
 WORKDIR /app
 

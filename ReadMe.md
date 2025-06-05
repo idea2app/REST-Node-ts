@@ -23,26 +23,30 @@
 
 1. [API entry & Health checking](source/controller/Base.ts)
 2. [User & Session](source/controller/User.ts)
+    - Email OTP (One Time Password)
 3. [OAuth sign in](source/controller/OAuth.ts)
     - recommend to use with [Next SSR middleware][16]
-4. [Activity logging](source/controller/ActivityLog.ts)
+4. [WebAuthn sign in](source/controller/WebAuthn.ts)
+    - recommend to use with [Passwordless ID][17]
+5. [Activity logging](source/controller/ActivityLog.ts)
+6. [File object storage](source/controller/File.ts)
 
 ## Best practice
 
 1.  Install GitHub apps in your organization or account:
 
-    1.  [Probot settings][17]: set up Issue labels & Pull Request rules
-    2.  [PR badge][18]: set up Online [VS Code][19] editor entries in Pull Request description
+    1.  [Probot settings][18]: set up Issue labels & Pull Request rules
+    2.  [PR badge][19]: set up Online [VS Code][20] editor entries in Pull Request description
 
-2.  Click the **[<kbd>Use this template</kbd>][20] button** on the top of this GitHub repository's home page, then create your own repository in the app-installed namespace above
+2.  Click the **[<kbd>Use this template</kbd>][21] button** on the top of this GitHub repository's home page, then create your own repository in the app-installed namespace above
 
 3.  Click the **[<kbd>Open in GitHub codespaces</kbd>][8] button** on the top of ReadMe file, then an **online VS Code development environment** will be started immediately
 
-4.  Recommend to add a [Notification step in GitHub actions][21] for your Team IM app
+4.  Recommend to add a [Notification step in GitHub actions][22] for your Team IM app
 
-5.  Remind the PMs & users of your product to submit **Feature/Enhancement** requests or **Bug** reports with [Issue forms][22] instead of IM messages or Mobile Phone calls
+5.  Remind the PMs & users of your product to submit **Feature/Enhancement** requests or **Bug** reports with [Issue forms][23] instead of IM messages or Mobile Phone calls
 
-6.  Collect all these issues into [Project kanbans][23], then create **Pull requests** & add `closes #issue_number` into its description for automation
+6.  Collect all these issues into [Project kanbans][24], then create **Pull requests** & add `closes #issue_number` into its description for automation
 
 ## API Usage
 
@@ -57,9 +61,9 @@
 | :------------------------: | :--------------------------: |
 |        `APP_SECRET`        |   encrypt Password & Token   |
 |       `DATABASE_URL`       | PostgreSQL connection string |
-|   `SUPABASE_PROJECT_URL`   |  [Supabase][24] project URL  |
+|   `SUPABASE_PROJECT_URL`   |  [Supabase][25] project URL  |
 |    `SUPABASE_ANON_KEY`     |      Supabase anon key       |
-|     `AWS_S3_END_POINT`     |  [AWS S3][25] endpoint URL   |
+|     `AWS_S3_END_POINT`     |  [AWS S3][26] endpoint URL   |
 |      `AWS_S3_BUCKET`       |      AWS S3 bucket name      |
 |   `AWS_S3_ACCESS_KEY_ID`   |     AWS S3 access key id     |
 | `AWS_S3_SECRET_ACCESS_KEY` |   AWS S3 secret access key   |
@@ -80,7 +84,7 @@ pnpm i
 pnpm dev
 ```
 
-or just press <kbd>F5</kbd> key in [VS Code][19].
+or just press <kbd>F5</kbd> key in [VS Code][20].
 
 ### Migration
 
@@ -143,12 +147,13 @@ git push origin master --tags
 [14]: https://github.com/anttiviljami/openapi-backend
 [15]: https://jestjs.io/
 [16]: https://github.com/idea2app/Next-SSR-middleware
-[17]: https://github.com/apps/settings
-[18]: https://pullrequestbadge.com/
-[19]: https://code.visualstudio.com/
-[20]: https://github.com/new?template_name=REST-Node-ts&template_owner=idea2app
-[21]: https://github.com/kaiyuanshe/kaiyuanshe.github.io/blob/bb4675a56bf1d6b207231313da5ed0af7cf0ebd6/.github/workflows/pull-request.yml#L32-L56
-[22]: https://github.com/idea2app/REST-Node-ts/issues/new/choose
-[23]: https://github.com/idea2app/REST-Node-ts/projects
-[24]: https://supabase.com/
-[25]: https://aws.amazon.com/s3/
+[17]: https://webauthn.passwordless.id/
+[18]: https://github.com/apps/settings
+[19]: https://pullrequestbadge.com/
+[20]: https://code.visualstudio.com/
+[21]: https://github.com/new?template_name=REST-Node-ts&template_owner=idea2app
+[22]: https://github.com/kaiyuanshe/kaiyuanshe.github.io/blob/bb4675a56bf1d6b207231313da5ed0af7cf0ebd6/.github/workflows/pull-request.yml#L32-L56
+[23]: https://github.com/idea2app/REST-Node-ts/issues/new/choose
+[24]: https://github.com/idea2app/REST-Node-ts/projects
+[25]: https://supabase.com/
+[26]: https://aws.amazon.com/s3/

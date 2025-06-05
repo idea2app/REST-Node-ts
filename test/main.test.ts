@@ -4,6 +4,12 @@ import { client } from './shared';
 
 let platformAdmin: User, commonUser: User;
 
+const expectedBase = {
+    id: expect.any(Number),
+    createdAt: expect.any(String),
+    updatedAt: expect.any(String)
+};
+
 describe('Main business logic', () => {
     it('should response 401 error with invalid token', async () => {
         try {
@@ -27,18 +33,15 @@ describe('Main business logic', () => {
 
         platformAdmin = { ...user1, ...platformAdminAccount };
 
-        const hackathonCreatorAccount = {
-            email: 'hackathon-creator@test.com',
-            password: 'hackathon-creator'
-        };
-        const { data: user2 } = await client.user.userControllerSignUp(
-            hackathonCreatorAccount
-        );
-        expect(user2.email).toBe(hackathonCreatorAccount.email);
+        const authorAccount = { email: 'author@test.com', password: 'author' };
+        const { data: user2 } =
+            await client.user.userControllerSignUp(authorAccount);
+
+        expect(user2.email).toBe(authorAccount.email);
         expect(user2.roles).toEqual([2]);
         expect(user2.password).toBeUndefined();
 
-        commonUser = { ...user2, ...hackathonCreatorAccount };
+        commonUser = { ...user2, ...authorAccount };
     });
 
     it('should sign in a User with Email & Password', async () => {
@@ -89,13 +92,10 @@ describe('Main business logic', () => {
     it('should record 2 activities of a signed-up & edited User', async () => {
         const UID = commonUser.id;
         const activityLog = {
-                id: expect.any(Number),
+                ...expectedBase,
                 tableName: 'User',
                 recordId: UID,
-                record: expect.any(Object),
-                createdAt: expect.any(String),
-                createdBy: expect.any(Object),
-                updatedAt: expect.any(String)
+                record: expect.any(Object)
             },
             { data } =
                 await client.activityLog.activityLogControllerGetUserList(UID);

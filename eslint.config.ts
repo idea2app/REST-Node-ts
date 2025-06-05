@@ -1,12 +1,11 @@
-// @ts-check
 import eslint from '@eslint/js';
-import { currentModulePath } from '@tech_query/node-toolkit';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
 import tsEslint from 'typescript-eslint';
+import { fileURLToPath } from 'url';
 
-const tsconfigRootDir = currentModulePath();
+const tsconfigRootDir = fileURLToPath(new URL('.', import.meta.url));
 
 export default tsEslint.config(
     // register all of the plugins up-front
@@ -17,7 +16,7 @@ export default tsEslint.config(
         }
     },
     // config with just ignores is the replacement for `.eslintignore`
-    { ignores: ['**/node_modules/**', '**/dist/**', 'type/**', '*.mjs'] },
+    { ignores: ['**/node_modules/**', '**/dist/**', 'type/**', '*.ts'] },
 
     // extends ...
     eslint.configs.recommended,

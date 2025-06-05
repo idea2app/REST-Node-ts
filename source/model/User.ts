@@ -78,7 +78,9 @@ export class SignUpData
 }
 
 export interface JWTAction {
-    context?: ParameterizedContext<JsonWebTokenError | { user: User }>;
+    context?: ParameterizedContext<
+        { jwtOriginalError: JsonWebTokenError } | { user: User }
+    >;
 }
 
 @Entity()
@@ -89,7 +91,7 @@ export class User extends Base {
 
     @IsEnum(Gender)
     @IsOptional()
-    @Column({ enum: Gender, nullable: true })
+    @Column({ type: 'simple-enum', enum: Gender, nullable: true })
     gender?: Gender;
 
     @IsUrl()

@@ -17,7 +17,7 @@ import { AWS_S3_BUCKET, AWS_S3_PUBLIC_HOST, s3Client } from '../utility';
 
 @Controller('/file')
 export class FileController {
-    @Post('/signed-link/:path(.*)')
+    @Post('/signed-link/:path(.+)')
     @Authorized()
     @HttpCode(201)
     @ResponseSchema(SignedLink)
@@ -34,7 +34,7 @@ export class FileController {
         return { putLink, getLink: `${AWS_S3_PUBLIC_HOST}/${Key}` };
     }
 
-    @Delete('/:path(.*)')
+    @Delete('/:path(.+)')
     @Authorized()
     @OnUndefined(204)
     async deleteFile(@CurrentUser() { id }: User, @Param('path') path: string) {

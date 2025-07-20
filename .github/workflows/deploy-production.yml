@@ -40,6 +40,9 @@ jobs:
                   platforms: linux/amd64
                   tags: ${{ env.BOX_URL }}:latest
                   outputs: type=docker,dest=${{ env.ARTIFACT_PATH }}
+                  # use GitHub actions cache
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max
 
             - name: Pick Docker Compose
               run: |
@@ -58,13 +61,13 @@ jobs:
                   strip_components: 1
 
             - name: Run Image
-              uses: garygrossgarten/github-action-ssh@release
+              uses: appleboy/ssh-action@v1
               if: ${{ env.HOST }}
               with:
                   host: ${{ secrets.HOST }}
                   username: ${{ secrets.USER }}
                   password: ${{ secrets.SSH_KEY }}
-                  command: |
+                  script: |
                       cd /tmp/${{ env.BOX_NAME }}
                       mkdir -p ~/${{ env.BOX_NAME }} 
                       mv .env docker-compose.yml start.sh ~/${{ env.BOX_NAME }}

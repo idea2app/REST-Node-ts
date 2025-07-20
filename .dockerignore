@@ -5,5 +5,5 @@ dist/
 !.npmrc
 !.env*
 start.sh
-eslint.config.mjs
+eslint.config.*
 *.pem

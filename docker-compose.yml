@@ -56,6 +56,8 @@ services:
         image: willfarrell/autoheal:1.2.0
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
+        networks:
+            - idea2app
         restart: always
     caddy:
         depends_on:
@@ -68,4 +70,4 @@ services:
             - idea2app
         restart: always
         volumes:
-            - ./Caddyfile:/etc/caddy/Caddyfile  
+            - ./Caddyfile:/etc/caddy/Caddyfile

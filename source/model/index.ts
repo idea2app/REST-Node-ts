@@ -40,7 +40,7 @@ export const dataSource = isProduct
           ...commonOptions
       })
     : new DataSource({
-          type: 'sqlite',
+          type: 'better-sqlite3',
           database: '.data/test.db',
           ...commonOptions
       });

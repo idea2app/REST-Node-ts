@@ -1,11 +1,5 @@
 import { Type } from 'class-transformer';
-import {
-    IsDateString,
-    IsInt,
-    IsOptional,
-    IsString,
-    Min
-} from 'class-validator';
+import { IsDateString, IsInt, IsOptional, IsString, Min } from 'class-validator';
 import { NewData } from 'mobx-restful';
 import {
     CreateDateColumn,
@@ -41,7 +35,7 @@ export interface ListChunk<T> {
 }
 
 export abstract class Base {
-    static from<T>(idOrData: T): T extends object ? T : Base {
+    static from<T extends Base = Base>(idOrData: number | object): T | undefined {
         if (isEmpty(idOrData)) return;
 
         const id = +idOrData,

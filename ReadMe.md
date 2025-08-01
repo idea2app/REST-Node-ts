@@ -5,9 +5,14 @@
 [![Deploy to Production environment](https://github.com/idea2app/REST-Node-ts/actions/workflows/deploy-production.yml/badge.svg)][4]
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)][5]
-
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)][6]
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)][7]
+[![Open in VS Code](https://img.shields.io/badge/Open%20in-VS%20Code-blue?logo=visualstudiocode)](https://vscode.dev/github/idea2app/REST-Node-ts)
+[![Open in Glitch](https://img.shields.io/badge/Open%20in-Glitch-blue?logo=glitch)](https://glitch.com/edit/#!/import/github/idea2app/REST-Node-ts)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/idea2app/REST-Node-ts)
+[![Edit in Codesandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/idea2app/REST-Node-ts)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/idea2app/REST-Node-ts)
+[![Open in Repl.it](https://replit.com/badge/github/withastro/astro)](https://replit.com/github/idea2app/REST-Node-ts)
+[![Open in Codeanywhere](https://codeanywhere.com/img/open-in-codeanywhere-btn.svg)](https://app.codeanywhere.com/#https://github.com/idea2app/REST-Node-ts)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/idea2app/REST-Node-ts)
 
 ## Technology stack
 

@@ -1,12 +1,6 @@
 import { server } from '@passwordless-id/webauthn';
 import { CollectedClientData } from '@passwordless-id/webauthn/dist/esm/types';
-import {
-    BadRequestError,
-    Body,
-    HttpCode,
-    JsonController,
-    Post
-} from 'routing-controllers';
+import { BadRequestError, Body, HttpCode, JsonController, Post } from 'routing-controllers';
 import { ResponseSchema } from 'routing-controllers-openapi';
 
 import {
@@ -17,8 +11,7 @@ import {
     WebAuthnChallenge,
     WebAuthnRegistration
 } from '../model';
-import { ActivityLogController } from './ActivityLog';
-import { UserController } from './User';
+import { activityLogService, sessionService } from '../service';
 
 const credentialStore = dataSource.getRepository(UserCredential);
 
@@ -49,7 +42,7 @@ export class WebAuthnController {
             challenge,
             origin
         });
-        const createdBy = await UserController.signUp({
+        const createdBy = await sessionService.signUp({
             email: name,
             password: id
         });
@@ -62,20 +55,15 @@ export class WebAuthnController {
             userVerified
         } as UserCredential);
 
-        await ActivityLogController.logCreate(
-            createdBy,
-            'UserCredential',
-            saved.id
-        );
-        return UserController.sign(createdBy);
+        await activityLogService.logCreate(createdBy, 'UserCredential', saved.id);
+
+        return sessionService.sign(createdBy);
     }
 
     @Post('/authentication')
     @HttpCode(201)
     @ResponseSchema(User)
-    async signIn(
-        @Body() { challenge, ...authentication }: WebAuthnAuthentication
-    ) {
+    async signIn(@Body() { challenge, ...authentication }: WebAuthnAuthentication) {
         const userCredential = await credentialStore.findOne({
             where: { uuid: authentication.id },
             relations: ['createdBy']
@@ -92,6 +80,6 @@ export class WebAuthnController {
             { ...credential, id: uuid },
             { origin, challenge, userVerified }
         );
-        return UserController.sign(createdBy);
+        return sessionService.sign(createdBy);
     }
 }

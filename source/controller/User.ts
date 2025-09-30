@@ -1,5 +1,3 @@
-import { createHash } from 'crypto';
-import { JsonWebTokenError, sign } from 'jsonwebtoken';
 import {
     Authorized,
     Body,
@@ -19,50 +17,14 @@ import {
 } from 'routing-controllers';
 import { ResponseSchema } from 'routing-controllers-openapi';
 
-import {
-    dataSource,
-    JWTAction,
-    Role,
-    SignInData,
-    User,
-    UserFilter,
-    UserListChunk
-} from '../model';
-import { APP_SECRET, searchConditionOf, supabase } from '../utility';
-import { ActivityLogController } from './ActivityLog';
-
-const store = dataSource.getRepository(User);
+import { Role, SignInData, User, UserFilter, UserListChunk } from '../model';
+import { activityLogService, BaseService, sessionService } from '../service';
+import { searchConditionOf, supabase } from '../utility';
 
 @JsonController('/user')
 export class UserController {
-    static encrypt = (raw: string) =>
-        createHash('sha1')
-            .update(APP_SECRET + raw)
-            .digest('hex');
-
-    static sign = (user: User): User => ({
-        ...user,
-        token: sign({ ...user }, APP_SECRET)
-    });
-
-    static async signUp({ email, password }: SignInData) {
-        const sum = await store.count();
-
-        const { password: _, ...user } = await store.save({
-            name: email,
-            email,
-            password: UserController.encrypt(password),
-            roles: [sum ? Role.Client : Role.Administrator]
-        });
-        await ActivityLogController.logCreate(user, 'User', user.id);
-
-        return user;
-    }
-
-    static getSession = ({ context: { state } }: JWTAction) =>
-        'user' in state
-            ? state.user
-            : (console.error(state.jwtOriginalError), null);
+    store = sessionService.userStore;
+    service = new BaseService(User, ['email', 'mobilePhone', 'name']);
 
     @Post('/session/email/:email/OTP')
     @OnUndefined(204)
@@ -83,9 +45,9 @@ export class UserController {
     @HttpCode(201)
     @ResponseSchema(User)
     async signIn(@Body() { email, password }: SignInData): Promise<User> {
-        let user = await store.findOneBy({
+        let user = await this.store.findOneBy({
             email,
-            password: UserController.encrypt(password)
+            password: sessionService.encrypt(password)
         });
 
         if (!user) {
@@ -97,17 +59,17 @@ export class UserController {
             if (error) throw new HttpError(error.status, error.message);
 
             user =
-                (await store.findOneBy({ email })) ||
+                (await this.store.findOneBy({ email })) ||
                 (await this.signUp({ email, password: data.user.id }));
         }
-        return UserController.sign(user);
+        return sessionService.sign(user);
     }
 
     @Post()
     @HttpCode(201)
     @ResponseSchema(User)
     signUp(@Body() data: SignInData) {
-        return UserController.signUp(data);
+        return sessionService.signUp(data);
     }
 
     @Put('/:id')
@@ -118,27 +80,24 @@ export class UserController {
         @CurrentUser() updatedBy: User,
         @Body() { password, ...data }: User
     ) {
-        if (
-            !updatedBy.roles.includes(Role.Administrator) &&
-            id !== updatedBy.id
-        )
+        if (!updatedBy.roles.includes(Role.Administrator) && id !== updatedBy.id)
             throw new ForbiddenError();
 
-        const saved = await store.save({
+        const saved = await this.store.save({
             ...data,
-            password: password && UserController.encrypt(password),
+            password: password && sessionService.encrypt(password),
             id
         });
-        await ActivityLogController.logUpdate(updatedBy, 'User', id);
+        await activityLogService.logUpdate(updatedBy, 'User', id);
 
-        return UserController.sign(saved);
+        return sessionService.sign(saved);
     }
 
     @Get('/:id')
     @OnNull(404)
     @ResponseSchema(User)
     getOne(@Param('id') id: number) {
-        return store.findOne({ where: { id } });
+        return this.service.getOne(id);
     }
 
     @Delete('/:id')
@@ -148,26 +107,19 @@ export class UserController {
         if (deletedBy.roles.includes(Role.Administrator) && id == deletedBy.id)
             throw new ForbiddenError();
 
-        await store.softDelete(id);
+        await this.store.softDelete(id);
 
-        await ActivityLogController.logDelete(deletedBy, 'User', id);
+        await activityLogService.logDelete(deletedBy, 'User', id);
     }
 
     @Get()
     @ResponseSchema(UserListChunk)
-    async getList(
-        @QueryParams() { gender, keywords, pageSize, pageIndex }: UserFilter
-    ) {
+    getList(@QueryParams() { gender, keywords, ...filter }: UserFilter) {
         const where = searchConditionOf<User>(
             ['email', 'mobilePhone', 'name'],
             keywords,
             gender && { gender }
         );
-        const [list, count] = await store.findAndCount({
-            where,
-            skip: pageSize * (pageIndex - 1),
-            take: pageSize
-        });
-        return { list, count };
+        return this.service.getList({ keywords, ...filter }, where);
     }
 }

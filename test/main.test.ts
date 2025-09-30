@@ -24,8 +24,7 @@ describe('Main business logic', () => {
             email: 'admin@test.com',
             password: 'admin'
         };
-        const { data: user1 } =
-            await client.user.userControllerSignUp(platformAdminAccount);
+        const { data: user1 } = await client.user.userControllerSignUp(platformAdminAccount);
 
         expect(user1.email).toBe(platformAdminAccount.email);
         expect(user1.roles).toEqual([0]);
@@ -34,8 +33,7 @@ describe('Main business logic', () => {
         platformAdmin = { ...user1, ...platformAdminAccount };
 
         const authorAccount = { email: 'author@test.com', password: 'author' };
-        const { data: user2 } =
-            await client.user.userControllerSignUp(authorAccount);
+        const { data: user2 } = await client.user.userControllerSignUp(authorAccount);
 
         expect(user2.email).toBe(authorAccount.email);
         expect(user2.roles).toEqual([2]);
@@ -66,16 +64,15 @@ describe('Main business logic', () => {
     });
 
     it("should get a User's profile by its ID", async () => {
-        const { data: user } = await client.user.userControllerGetOne(
-            commonUser.id
-        );
+        const { data: user } = await client.user.userControllerGetOne(commonUser.id);
+
         const { password, token, deletedAt, ...profile } = commonUser;
 
         expect(user).toMatchObject(profile);
     });
 
     it('should edit the profile of signed-in User', async () => {
-        const newProfile = { name: 'Hackathon Creator' };
+        const newProfile = { name: 'Test Client' };
 
         const { data: user } = await client.user.userControllerUpdateOne(
             commonUser.id,
@@ -97,8 +94,7 @@ describe('Main business logic', () => {
                 recordId: UID,
                 record: expect.any(Object)
             },
-            { data } =
-                await client.activityLog.activityLogControllerGetUserList(UID);
+            { data } = await client.activityLog.activityLogControllerGetUserList(UID);
 
         expect(data).toMatchObject({
             count: 2,

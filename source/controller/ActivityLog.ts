@@ -9,7 +9,6 @@ import {
     BaseFilter,
     dataSource,
     LogableTable,
-    Operation,
     User,
     UserRank,
     UserRankListChunk
@@ -21,36 +20,6 @@ const store = dataSource.getRepository(ActivityLog),
 
 @JsonController('/activity-log')
 export class ActivityLogController {
-    static logCreate(
-        createdBy: User,
-        tableName: ActivityLog['tableName'],
-        recordId: number
-    ) {
-        const operation = Operation.Create;
-
-        return store.save({ createdBy, operation, tableName, recordId });
-    }
-
-    static logUpdate(
-        createdBy: User,
-        tableName: ActivityLog['tableName'],
-        recordId: number
-    ) {
-        const operation = Operation.Update;
-
-        return store.save({ createdBy, operation, tableName, recordId });
-    }
-
-    static logDelete(
-        createdBy: User,
-        tableName: ActivityLog['tableName'],
-        recordId: number
-    ) {
-        const operation = Operation.Delete;
-
-        return store.save({ createdBy, operation, tableName, recordId });
-    }
-
     @Get('/user-rank')
     @ResponseSchema(UserRankListChunk)
     async getUserRankList(@QueryParams() { pageSize, pageIndex }: BaseFilter) {
@@ -74,10 +43,7 @@ export class ActivityLogController {
         @Param('id') id: number,
         @QueryParams() { operation, pageSize, pageIndex }: ActivityLogFilter
     ) {
-        return this.queryList(
-            { operation, createdBy: { id } },
-            { pageSize, pageIndex }
-        );
+        return this.queryList({ operation, createdBy: { id } }, { pageSize, pageIndex });
     }
 
     @Get('/:table/:id')
@@ -87,16 +53,10 @@ export class ActivityLogController {
         @Param('id') recordId: number,
         @QueryParams() { operation, pageSize, pageIndex }: ActivityLogFilter
     ) {
-        return this.queryList(
-            { operation, tableName, recordId },
-            { pageSize, pageIndex }
-        );
+        return this.queryList({ operation, tableName, recordId }, { pageSize, pageIndex });
     }
 
-    async queryList(
-        where: FindOptionsWhere<ActivityLog>,
-        { pageSize, pageIndex }: BaseFilter
-    ) {
+    async queryList(where: FindOptionsWhere<ActivityLog>, { pageSize, pageIndex }: BaseFilter) {
         const [list, count] = await store.findAndCount({
             where,
             relations: ['createdBy'],

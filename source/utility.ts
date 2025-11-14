@@ -4,10 +4,13 @@ import { config } from 'dotenv';
 import { DataObject } from 'mobx-restful';
 import { FindOneOptions, FindOptionsWhere, ILike } from 'typeorm';
 
-config({ path: [`.env.${process.env.NODE_ENV}.local`, '.env.local', '.env'] });
+export const { NODE_ENV = 'development' } = process.env;
+
+export const isProduct = NODE_ENV === 'production';
+
+config({ path: [`.env.${NODE_ENV}.local`, '.env.local', '.env'] });
 
 export const {
-    NODE_ENV,
     HTTP_PROXY,
     PORT = 8080,
     DATABASE_URL,
@@ -20,8 +23,6 @@ export const {
     AWS_S3_SECRET_ACCESS_KEY,
     AWS_S3_PUBLIC_HOST
 } = process.env;
-
-export const isProduct = NODE_ENV === 'production';
 
 export const searchConditionOf = <T extends DataObject>(
     keys: (keyof T)[],

@@ -43,7 +43,10 @@ export class ActivityLogController {
         @Param('id') id: number,
         @QueryParams() { operation, pageSize, pageIndex }: ActivityLogFilter
     ) {
-        return this.queryList({ operation, createdBy: { id } }, { pageSize, pageIndex });
+        return this.queryList(
+            { ...(operation && { operation }), createdBy: { id } },
+            { pageSize, pageIndex }
+        );
     }
 
     @Get('/:table/:id')
@@ -53,7 +56,10 @@ export class ActivityLogController {
         @Param('id') recordId: number,
         @QueryParams() { operation, pageSize, pageIndex }: ActivityLogFilter
     ) {
-        return this.queryList({ operation, tableName, recordId }, { pageSize, pageIndex });
+        return this.queryList(
+            { ...(operation && { operation }), tableName, recordId },
+            { pageSize, pageIndex }
+        );
     }
 
     async queryList(where: FindOptionsWhere<ActivityLog>, { pageSize, pageIndex }: BaseFilter) {

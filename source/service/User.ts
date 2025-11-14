@@ -1,7 +1,7 @@
 import { ForbiddenError, NotFoundError } from 'routing-controllers';
 import { FindManyOptions, FindOneOptions, FindOptionsWhere } from 'typeorm';
 
-import { ActivityLog,Role, User, UserBase, UserBaseFilter } from '../model';
+import { ActivityLog, BaseFilter, InputData, Role, User, UserBase, UserBaseFilter } from '../model';
 import { searchConditionOf } from '../utility';
 import { activityLogService } from './ActivityLog';
 import { BaseService } from './Base';
@@ -15,37 +15,36 @@ export class UserService<T extends UserBase> extends BaseService<T> {
         return super.getOne(id, relations);
     }
 
+    async validateAccess(
+        id: number,
+        { id: uid, roles }: User,
+        allowedRoles: Role[] = [Role.Manager, Role.Administrator]
+    ) {
+        const { tableName } = this,
+            oldOne = await this.getOne(id);
+
+        if (!oldOne) throw new NotFoundError(`${tableName} with ID "${id}" is not found`);
+
+        if (oldOne.createdBy?.id !== uid && !roles.some(role => allowedRoles.includes(role)))
+            throw new ForbiddenError(
+                `Only creator or some roles can access ${tableName} with ID "${id}"`
+            );
+        return oldOne;
+    }
+
     async editOne(id: number, data: Partial<T>, updatedBy: User) {
-        const { tableName } = this;
-
-        const oldOne = await this.getOne(id);
-
-        if (!oldOne) throw new NotFoundError(`${tableName} ${id} is not found`);
-
-        if (
-            oldOne.createdBy?.id !== updatedBy.id &&
-            !updatedBy.roles.includes(Role.Administrator) &&
-            !updatedBy.roles.includes(Role.Manager)
-        )
-            throw new ForbiddenError(`Only creator or staff can edit ${tableName} ${id}`);
+        await this.validateAccess(id, updatedBy);
 
         return super.editOne(id, { ...data, updatedBy });
     }
 
     async deleteOne(id: number, deletedBy: User) {
-        const { store, tableName } = this;
+        const { store } = this;
 
-        const oldOne = await store.findOne({
-            where: { id } as FindOptionsWhere<T>,
-            relations: ['createdBy']
-        });
-
-        if (!oldOne) throw new NotFoundError(`${tableName} ${id} is not found`);
-
-        if (oldOne.createdBy?.id !== deletedBy.id && !deletedBy.roles.includes(Role.Administrator))
-            throw new ForbiddenError(`Only creator or admin can delete ${tableName} ${id}`);
+        await this.validateAccess(id, deletedBy, [Role.Administrator]);
 
         await store.save({ id, deletedBy } as T);
+
         return store.softDelete(id);
     }
 
@@ -59,7 +58,11 @@ export class UserService<T extends UserBase> extends BaseService<T> {
             ...(updatedBy ? { updatedBy: { id: updatedBy } } : {})
         } as FindOptionsWhere<T>);
 
-        return super.getList({ keywords, ...filter }, where, options);
+        return super.getList(
+            { keywords, ...filter } as Partial<InputData<T>> & BaseFilter,
+            where,
+            options
+        );
     }
 }
 

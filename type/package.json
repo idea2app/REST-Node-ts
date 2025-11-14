@@ -4,8 +4,8 @@
     "types": "index.d.ts",
     "dependencies": {
         "@types/jsonwebtoken": "^9.0.10",
-        "@types/koa": "^2.15.0",
-        "mobx-github": "^0.3.11",
-        "mobx-restful": "^2.1.0"
+        "@types/koa": "^3.0.1",
+        "mobx-github": "^0.6.2",
+        "mobx-restful": "^2.1.4"
     }
 }

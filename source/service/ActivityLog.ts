@@ -1,4 +1,4 @@
-import { ActivityLog, dataSource,Operation, User } from '../model';
+import { ActivityLog, dataSource, Operation, User } from '../model';
 
 export class ActivityLogService {
     store = dataSource.getRepository(ActivityLog);

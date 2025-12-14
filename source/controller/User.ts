@@ -19,7 +19,7 @@ import { ResponseSchema } from 'routing-controllers-openapi';
 
 import { Role, SignInData, User, UserFilter, UserListChunk } from '../model';
 import { activityLogService, BaseService, sessionService } from '../service';
-import { searchConditionOf, supabase } from '../utility';
+import { supabase } from '../utility';
 
 @JsonController('/user')
 export class UserController {
@@ -83,14 +83,14 @@ export class UserController {
         if (!updatedBy.roles.includes(Role.Administrator) && id !== updatedBy.id)
             throw new ForbiddenError();
 
-        const saved = await this.store.save({
+        await this.store.save({
             ...data,
             password: password && sessionService.encrypt(password),
             id
         });
         await activityLogService.logUpdate(updatedBy, 'User', id);
 
-        return sessionService.sign(saved);
+        return sessionService.sign(await this.store.findOneBy({ id }));
     }
 
     @Get('/:id')
@@ -114,12 +114,7 @@ export class UserController {
 
     @Get()
     @ResponseSchema(UserListChunk)
-    getList(@QueryParams() { gender, keywords, ...filter }: UserFilter) {
-        const where = searchConditionOf<User>(
-            ['email', 'mobilePhone', 'name'],
-            keywords,
-            gender && { gender }
-        );
-        return this.service.getList({ keywords, ...filter }, where);
+    getList(@QueryParams() filter: UserFilter) {
+        return this.service.getList(filter);
     }
 }

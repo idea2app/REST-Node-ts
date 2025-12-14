@@ -34,7 +34,6 @@
 ## Best practice
 
 1.  Install GitHub apps in your organization or account:
-
     1.  [Probot settings][18]: set up Issue labels & Pull Request rules
     2.  [PR badge][19]: set up Online [VS Code][20] editor entries in Pull Request description
 
@@ -60,7 +59,7 @@
 |            Name            |            Usage             |
 | :------------------------: | :--------------------------: |
 |        `APP_SECRET`        |   encrypt Password & Token   |
-|       `DATABASE_URL`       | PostgreSQL connection string |
+|        `DATABASE_*`        | Database connection settings |
 |   `SUPABASE_PROJECT_URL`   |  [Supabase][25] project URL  |
 |    `SUPABASE_ANON_KEY`     |      Supabase anon key       |
 |     `AWS_S3_END_POINT`     |  [AWS S3][26] endpoint URL   |

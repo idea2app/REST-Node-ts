@@ -1,9 +1,9 @@
 import { NotFoundError } from 'routing-controllers';
-import { FindManyOptions, FindOptionsWhere, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { Constructor } from 'web-utility';
 
 import { Base, BaseFilter, dataSource, InputData, ListChunk } from '../model';
-import { searchConditionOf } from '../utility';
+import { cleanEmptyFields, searchConditionOf } from '../utility';
 
 export class BaseService<T extends Base> {
     store: Repository<T>;
@@ -19,7 +19,7 @@ export class BaseService<T extends Base> {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     createOne(data: Partial<T>, ...rest: any[]) {
-        return this.store.save(data as T);
+        return this.store.save(cleanEmptyFields(data) as T);
     }
 
     getOne(id: number, relations?: string[]) {
@@ -30,11 +30,11 @@ export class BaseService<T extends Base> {
     async editOne(id: number, data: Partial<T>, ...rest: any[]) {
         const { store, tableName } = this;
 
-        const existed = await this.store.existsBy({ id } as FindOptionsWhere<T>);
+        const existed = await this.store.findOneBy({ id } as FindOptionsWhere<T>);
 
         if (!existed) throw new NotFoundError(`${tableName} ${id} is not found`);
 
-        return store.save({ ...data, id } as T);
+        return store.save({ ...existed, ...cleanEmptyFields(data), id } as T);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -49,9 +49,14 @@ export class BaseService<T extends Base> {
             pageIndex = 1,
             ...filter
         }: Partial<InputData<T>> & BaseFilter = {},
-        where = searchConditionOf<T>(this.searchKeys, keywords, filter as FindOptionsWhere<T>),
+        where?: FindOneOptions<T>['where'],
         options = { order: { updatedAt: 'DESC' } } as FindManyOptions<T>
     ) {
+        where ??= searchConditionOf<T>(
+            this.searchKeys,
+            keywords,
+            cleanEmptyFields(filter as Partial<InputData<{}>>)
+        );
         const [list, count] = await this.store.findAndCount({
             ...options,
             where,

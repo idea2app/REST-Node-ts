@@ -2,7 +2,7 @@ import { ForbiddenError, NotFoundError } from 'routing-controllers';
 import { FindManyOptions, FindOneOptions, FindOptionsWhere } from 'typeorm';
 
 import { ActivityLog, BaseFilter, InputData, Role, User, UserBase, UserBaseFilter } from '../model';
-import { searchConditionOf } from '../utility';
+import { cleanEmptyFields, searchConditionOf } from '../utility';
 import { activityLogService } from './ActivityLog';
 import { BaseService } from './Base';
 
@@ -49,17 +49,21 @@ export class UserService<T extends UserBase> extends BaseService<T> {
     }
 
     getList(
-        { createdBy, updatedBy, keywords, ...filter }: UserBaseFilter,
+        { createdBy, updatedBy, keywords, pageIndex, pageSize, ...filter }: UserBaseFilter,
         where?: FindOneOptions<T>['where'],
         options: FindManyOptions<T> = { relations: ['createdBy'] }
     ) {
-        where ??= searchConditionOf<T>(this.searchKeys, keywords, {
-            ...(createdBy ? { createdBy: { id: createdBy } } : {}),
-            ...(updatedBy ? { updatedBy: { id: updatedBy } } : {})
-        } as FindOptionsWhere<T>);
-
+        where ??= searchConditionOf<T>(
+            this.searchKeys,
+            keywords,
+            cleanEmptyFields({
+                createdBy: createdBy && { id: createdBy },
+                updatedBy: updatedBy && { id: updatedBy },
+                ...filter
+            }) as FindOptionsWhere<T>
+        );
         return super.getList(
-            { keywords, ...filter } as Partial<InputData<T>> & BaseFilter,
+            { keywords, pageIndex, pageSize, ...filter } as Partial<InputData<T>> & BaseFilter,
             where,
             options
         );

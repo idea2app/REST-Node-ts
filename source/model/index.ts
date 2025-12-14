@@ -1,8 +1,7 @@
-import { ConnectionOptions, parse } from 'pg-connection-string';
 import { DataSource } from 'typeorm';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
 
-import { DATABASE_URL, isProduct } from '../utility';
+import { isProduct } from '../utility';
 import { ActivityLog } from './ActivityLog';
 import { User } from './User';
 import { UserCredential } from './WebAuthn';
@@ -14,9 +13,17 @@ export * from './OAuth';
 export * from './User';
 export * from './WebAuthn';
 
-const { ssl, host, port, user, password, database } = isProduct
-    ? parse(DATABASE_URL)
-    : ({} as ConnectionOptions);
+const {
+    DATABASE_TYPE: type,
+    DATABASE_SSL: ssl,
+    DATABASE_HOST: host,
+    DATABASE_PORT: port,
+    DATABASE_USER: user,
+    DATABASE_PASSWORD: password,
+    DATABASE_NAME: database
+} = isProduct ? process.env : {};
+
+const entities = [User, UserCredential, ActivityLog];
 
 const commonOptions: Pick<
     SqliteConnectionOptions,
@@ -24,7 +31,7 @@ const commonOptions: Pick<
 > = {
     logging: true,
     synchronize: true,
-    entities: [User, UserCredential, ActivityLog],
+    entities,
     // remove at next Major version: https://typeorm.io/docs/data-source/null-and-undefined-handling/#default-behavior
     invalidWhereValuesBehavior: { null: 'throw', undefined: 'throw' },
     migrations: [`${isProduct ? '.data' : 'migration'}/*.ts`]
@@ -32,8 +39,8 @@ const commonOptions: Pick<
 
 export const dataSource = isProduct
     ? new DataSource({
-          type: 'postgres',
-          ssl: ssl as boolean,
+          type: type as 'postgres',
+          ssl: ssl === 'true',
           host,
           port: +port,
           username: user,

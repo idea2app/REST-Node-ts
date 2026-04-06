@@ -21,7 +21,7 @@ jobs:
             packages: write
             contents: read
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
 
             - name: Inject Environment variables
               run: |
@@ -30,11 +30,11 @@ jobs:
                   cat > .env <<EOF
                   ${{ secrets.ENV_FILE }}
                   EOF
-            - uses: docker/setup-qemu-action@v3
-            - uses: docker/setup-buildx-action@v3
+            - uses: docker/setup-qemu-action@v4
+            - uses: docker/setup-buildx-action@v4
 
             - name: Build Image
-              uses: docker/build-push-action@v6
+              uses: docker/build-push-action@v7
               with:
                   context: .
                   platforms: linux/amd64
@@ -50,7 +50,7 @@ jobs:
                   mv ${{ env.ARTIFACT_PATH }} ./.env ./docker-compose.yml ./start.sh ./build
 
             - name: Transport Image
-              uses: appleboy/scp-action@v0.1.7
+              uses: appleboy/scp-action@v1
               if: ${{ env.HOST }}
               with:
                   source: ./build/*.*

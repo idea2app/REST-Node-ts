@@ -1,6 +1,6 @@
 # Reference: https://pnpm.io/docker#example-1-build-a-bundle-in-a-docker-container
 
-FROM node:22-slim AS base
+FROM node:24-slim AS base
 RUN apt-get update && \
     apt-get install ca-certificates curl -y --no-install-recommends
 ENV PNPM_HOME="/pnpm"

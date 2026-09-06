@@ -1,22 +1,50 @@
 import { server } from '@passwordless-id/webauthn';
 import { CollectedClientData } from '@passwordless-id/webauthn/dist/esm/types';
-import { BadRequestError, Body, HttpCode, JsonController, Post } from 'routing-controllers';
+import {
+    Authorized,
+    BadRequestError,
+    Body,
+    CurrentUser,
+    Delete,
+    Get,
+    HttpCode,
+    JsonController,
+    OnUndefined,
+    Param,
+    Post,
+    QueryParams
+} from 'routing-controllers';
 import { ResponseSchema } from 'routing-controllers-openapi';
 
 import {
-    dataSource,
+    BaseFilter,
     User,
     UserCredential,
+    UserCredentialListChunk,
     WebAuthnAuthentication,
     WebAuthnChallenge,
     WebAuthnRegistration
 } from '../model';
-import { activityLogService, sessionService } from '../service';
+import { sessionService, userCredentialService } from '../service';
 
-const credentialStore = dataSource.getRepository(UserCredential);
+/**
+ * Extract email address from WebAuthn assertion userHandle.
+ */
+export const emailFromUserHandle = (userHandle?: string) => {
+    if (!userHandle) return;
+
+    if (userHandle.includes('@')) return userHandle;
+
+    const decoded = Buffer.from(userHandle, 'base64url').toString();
+
+    return decoded.includes('@') ? decoded : userHandle;
+};
 
 @JsonController('/user/WebAuthn')
 export class WebAuthnController {
+    /**
+     * Generate a cryptographic challenge for WebAuthn ceremonies.
+     */
     @Post('/challenge')
     @HttpCode(201)
     @ResponseSchema(WebAuthnChallenge)
@@ -24,10 +52,27 @@ export class WebAuthnController {
         return { string: server.randomChallenge() };
     }
 
-    @Post('/registration')
+    /**
+     * Retrieve paginated list of WebAuthn credentials for current authenticated user.
+     */
+    @Get('/session/credential')
+    @Authorized()
+    @ResponseSchema(UserCredentialListChunk)
+    getCredentialList(@CurrentUser() user: User, @QueryParams() filter: BaseFilter) {
+        return userCredentialService.getUserList(user, filter);
+    }
+
+    /**
+     * Register a new WebAuthn credential for current authenticated user.
+     */
+    @Post('/session/credential')
+    @Authorized()
     @HttpCode(201)
-    @ResponseSchema(User)
-    async signUp(@Body() { challenge, ...registration }: WebAuthnRegistration) {
+    @ResponseSchema(UserCredential)
+    async createCredential(
+        @CurrentUser() createdBy: User,
+        @Body() { challenge, ...registration }: WebAuthnRegistration
+    ) {
         const { origin } = JSON.parse(
             atob(registration.response.clientDataJSON)
         ) as CollectedClientData;
@@ -36,38 +81,45 @@ export class WebAuthnController {
             authenticator,
             credential: { id: uuid, ...credential },
             synced,
-            user: { id, name },
             userVerified
         } = await server.verifyRegistration(registration, {
             challenge,
             origin
         });
-        const createdBy = await sessionService.signUp({
-            email: name,
-            password: id
-        });
-        const saved = await credentialStore.save({
-            createdBy,
-            uuid,
-            authenticator,
-            ...credential,
-            synced,
-            userVerified
-        } as UserCredential);
 
-        await activityLogService.logCreate(createdBy, 'UserCredential', saved.id);
-
-        return sessionService.sign(createdBy);
+        return userCredentialService.createOne(
+            {
+                uuid,
+                authenticator,
+                ...credential,
+                synced,
+                userVerified
+            } as unknown as UserCredential,
+            createdBy
+        );
     }
 
+    /**
+     * Delete a specific WebAuthn credential by ID for current authenticated user.
+     */
+    @Delete('/session/credential/:cid')
+    @Authorized()
+    @OnUndefined(204)
+    async deleteCredential(@CurrentUser() deletedBy: User, @Param('cid') cid: number) {
+        await userCredentialService.deleteOne(cid, deletedBy);
+    }
+
+    /**
+     * Authenticate user session with WebAuthn credential assertion.
+     */
     @Post('/authentication')
     @HttpCode(201)
     @ResponseSchema(User)
     async signIn(@Body() { challenge, ...authentication }: WebAuthnAuthentication) {
-        const userCredential = await credentialStore.findOne({
-            where: { uuid: authentication.id },
-            relations: ['createdBy']
-        });
+        const email = emailFromUserHandle(authentication.response.userHandle),
+            userCredential =
+                email && (await userCredentialService.findByUuidAndEmail(authentication.id, email));
+
         if (!userCredential) throw new BadRequestError('Invalid credential');
 
         const { uuid, userVerified, createdBy, ...credential } = userCredential,
@@ -80,6 +132,7 @@ export class WebAuthnController {
             { ...credential, id: uuid },
             { origin, challenge, userVerified }
         );
+
         return sessionService.sign(createdBy);
     }
 }

@@ -39,7 +39,7 @@ export const dataSource = isProduct
           type: type as 'postgres',
           ssl: ssl === 'true',
           host,
-          port: +port,
+          port: Number(port ?? 5432),
           username: user,
           password,
           database,

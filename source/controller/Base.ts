@@ -1,4 +1,3 @@
-import { marked } from 'marked';
 import { Controller, Get, HeaderParam, HttpCode } from 'routing-controllers';
 
 import { isProduct } from '../utility';
@@ -22,8 +21,10 @@ ${isProduct ? '' : `- Mock API served at ${host}/mock/`}
         return '';
     }
 
-    @Get()
-    getIndex(@HeaderParam('host') host: string) {
+    @Get('/')
+    async getIndex(@HeaderParam('host') host: string) {
+        const { marked } = await import('marked');
+
         return marked(BaseController.entryOf(host));
     }
 }

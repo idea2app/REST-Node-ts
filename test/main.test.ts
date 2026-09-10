@@ -44,8 +44,8 @@ describe('Main business logic', () => {
 
     it('should sign in a User with Email & Password', async () => {
         const { data: session } = await client.user.userControllerSignIn({
-            email: commonUser.email,
-            password: commonUser.password
+            email: commonUser.email!,
+            password: commonUser.password!
         });
 
         expect(session.email).toBe(commonUser.email);
@@ -64,7 +64,7 @@ describe('Main business logic', () => {
     });
 
     it("should get a User's profile by its ID", async () => {
-        const { data: user } = await client.user.userControllerGetOne(commonUser.id);
+        const { data: user } = await client.user.userControllerGetOne(commonUser.id!);
 
         const { password, token, deletedAt, ...profile } = commonUser;
 
@@ -75,7 +75,7 @@ describe('Main business logic', () => {
         const newProfile = { name: 'Test Client' };
 
         const { data: user } = await client.user.userControllerUpdateOne(
-            commonUser.id,
+            commonUser.id!,
             newProfile,
             { headers: { Authorization: `Bearer ${commonUser.token}` } }
         );
@@ -87,7 +87,7 @@ describe('Main business logic', () => {
     });
 
     it('should record 2 activities of a signed-up & edited User', async () => {
-        const UID = commonUser.id;
+        const UID = commonUser.id!;
         const activityLog = {
                 ...expectedBase,
                 tableName: 'User',

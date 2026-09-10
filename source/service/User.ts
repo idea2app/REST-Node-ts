@@ -49,10 +49,13 @@ export class UserService<T extends UserBase> extends BaseService<T> {
     }
 
     getList(
-        { createdBy, updatedBy, keywords, pageIndex, pageSize, ...filter }: UserBaseFilter,
+        input: Partial<InputData<T>> & UserBaseFilter = {},
         where?: FindOneOptions<T>['where'],
         options = { relations: { createdBy: true } } as FindManyOptions<T>
     ) {
+        const { createdBy, updatedBy, keywords, pageIndex, pageSize, ...filter } =
+            input as UserBaseFilter;
+
         where ??= searchConditionOf<T>(
             this.searchKeys,
             keywords,

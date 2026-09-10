@@ -1,15 +1,19 @@
 {
     "compilerOptions": {
         "target": "ES2022",
-        "module": "CommonJS",
-        "moduleResolution": "Node",
+        "module": "Node16",
+        "moduleResolution": "Node16",
+        "isolatedModules": true,
         "esModuleInterop": true,
+        "strictPropertyInitialization": false,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "preserveSymlinks": true,
         "declaration": true,
         "importHelpers": true,
         "skipLibCheck": true,
+        "types": ["jest"],
+        "rootDir": "source",
         "outDir": "dist"
     },
     "include": ["source/**/*.ts"]

@@ -6,6 +6,7 @@ import {
     ActivityLog,
     ActivityLogFilter,
     ActivityLogListChunk,
+    Base,
     BaseFilter,
     dataSource,
     LogableTable,
@@ -22,7 +23,7 @@ const store = dataSource.getRepository(ActivityLog),
 export class ActivityLogController {
     @Get('/user-rank')
     @ResponseSchema(UserRankListChunk)
-    async getUserRankList(@QueryParams() { pageSize, pageIndex }: BaseFilter) {
+    async getUserRankList(@QueryParams() { pageSize = 10, pageIndex = 1 }: BaseFilter) {
         const skip = pageSize * (pageIndex - 1);
 
         const [list, count] = await userRankStore.findAndCount({
@@ -32,7 +33,7 @@ export class ActivityLogController {
         });
         for (let i = 0, item: UserRank; (item = list[i]); i++) {
             item.rank = skip + i + 1;
-            item.user = await userStore.findOneBy({ id: item.userId });
+            item.user = (await userStore.findOneBy({ id: item.userId }))!;
         }
         return { list, count };
     }
@@ -41,7 +42,7 @@ export class ActivityLogController {
     @ResponseSchema(ActivityLogListChunk)
     getUserList(
         @Param('id') id: number,
-        @QueryParams() { operation, pageSize, pageIndex }: ActivityLogFilter
+        @QueryParams() { operation, pageSize = 10, pageIndex = 1 }: ActivityLogFilter
     ) {
         return this.queryList(
             { ...(operation && { operation }), createdBy: { id } },
@@ -54,7 +55,7 @@ export class ActivityLogController {
     getList(
         @Param('table') tableName: keyof typeof LogableTable,
         @Param('id') recordId: number,
-        @QueryParams() { operation, pageSize, pageIndex }: ActivityLogFilter
+        @QueryParams() { operation, pageSize = 10, pageIndex = 1 }: ActivityLogFilter
     ) {
         return this.queryList(
             { ...(operation && { operation }), tableName, recordId },
@@ -62,7 +63,10 @@ export class ActivityLogController {
         );
     }
 
-    async queryList(where: FindOptionsWhere<ActivityLog>, { pageSize, pageIndex }: BaseFilter) {
+    async queryList(
+        where: FindOptionsWhere<ActivityLog>,
+        { pageSize = 10, pageIndex = 1 }: BaseFilter
+    ) {
         const [list, count] = await store.findAndCount({
             where,
             relations: { createdBy: true },
@@ -71,9 +75,10 @@ export class ActivityLogController {
         });
 
         for (const activity of list)
-            activity.record = await dataSource
-                .getRepository<ActivityLog['record']>(activity.tableName)
-                .findOneBy({ id: activity.recordId });
+            activity.record =
+                (await dataSource
+                    .getRepository<Base>(activity.tableName)
+                    .findOneBy({ id: activity.recordId })) ?? undefined;
 
         return { list, count };
     }

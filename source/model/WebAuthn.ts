@@ -1,11 +1,11 @@
-import {
+import type {
     AuthenticationJSON,
     AuthenticatorAssertionResponseJSON,
     AuthenticatorAttestationResponseJSON,
     AuthenticatorInfo,
     RegistrationJSON,
     UserInfo
-} from '@passwordless-id/webauthn/dist/esm/types';
+} from '@passwordless-id/webauthn' with { 'resolution-mode': 'import' };
 import { Type } from 'class-transformer';
 import {
     IsBoolean,

@@ -34,8 +34,11 @@ export class SessionService {
         return user;
     }
 
-    checkJWT = ({ context: { state } }: JWTAction) =>
-        'user' in state ? state.user : (console.error(state.jwtOriginalError), null);
+    checkJWT = ({ context }: JWTAction) =>
+        context &&
+        ('user' in context.state
+            ? context.state.user
+            : console.error(context.state.jwtOriginalError));
 }
 
 export const sessionService = new SessionService();

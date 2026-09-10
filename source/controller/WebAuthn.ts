@@ -1,5 +1,6 @@
-import { server } from '@passwordless-id/webauthn';
-import { CollectedClientData } from '@passwordless-id/webauthn/dist/esm/types';
+import type { CollectedClientData } from '@passwordless-id/webauthn' with {
+    'resolution-mode': 'import'
+};
 import {
     Authorized,
     BadRequestError,
@@ -27,12 +28,16 @@ import {
 } from '../model';
 import { sessionService, UserCredentialService, userCredentialService } from '../service';
 
+const WebAuthn = import('@passwordless-id/webauthn');
+
 @JsonController('/user/WebAuthn')
 export class WebAuthnController {
     @Post('/challenge')
     @HttpCode(201)
     @ResponseSchema(WebAuthnChallenge)
-    createChallenge() {
+    async createChallenge() {
+        const { server } = await WebAuthn;
+
         return { string: server.randomChallenge() };
     }
 
@@ -53,6 +58,8 @@ export class WebAuthnController {
     ) {
         if (!createdBy.email || registration.user?.id !== createdBy.email)
             throw new BadRequestError('Invalid credential user');
+
+        const { server } = await WebAuthn;
 
         const { origin } = JSON.parse(
             atob(registration.response.clientDataJSON)
@@ -100,6 +107,8 @@ export class WebAuthnController {
                 email && (await userCredentialService.findByUuidAndEmail(authentication.id, email));
 
         if (!userCredential) throw new BadRequestError('Invalid credential');
+
+        const { server } = await WebAuthn;
 
         const { uuid, userVerified, createdBy, ...credential } = userCredential,
             { origin } = JSON.parse(

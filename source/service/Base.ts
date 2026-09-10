@@ -1,5 +1,11 @@
 import { NotFoundError } from 'routing-controllers';
-import { FindManyOptions, FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
+import {
+    FindManyOptions,
+    FindOneOptions,
+    FindOptionsRelations,
+    FindOptionsWhere,
+    Repository
+} from 'typeorm';
 import { Constructor } from 'web-utility';
 
 import { Base, BaseFilter, dataSource, InputData, ListChunk } from '../model';
@@ -22,15 +28,20 @@ export class BaseService<T extends Base> {
         return this.store.save(cleanEmptyFields(data) as T);
     }
 
-    getOne(id: number, relations?: string[]) {
-        return this.store.findOne({ where: { id } as FindOptionsWhere<T>, relations });
+    getOne(id: number, relations: string[] = []) {
+        return this.store.findOne({
+            where: { id } as FindOptionsWhere<T>,
+            relations: Object.fromEntries(
+                relations.map(relation => [relation, true])
+            ) as FindOptionsRelations<T>
+        });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async editOne(id: number, data: Partial<T>, ...rest: any[]) {
         const { store, tableName } = this;
 
-        const existed = await this.store.findOneBy({ id } as FindOptionsWhere<T>);
+        const existed = await store.findOneBy({ id } as FindOptionsWhere<T>);
 
         if (!existed) throw new NotFoundError(`${tableName} ${id} is not found`);
 

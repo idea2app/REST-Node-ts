@@ -18,6 +18,9 @@ export class OauthController {
             Authorization: `Bearer ${accessToken}`
         });
         const { email, login, avatar_url } = body!;
+
+        if (!email) throw new URIError(`GitHub account "${login}" has no email`);
+
         const user =
             (await this.userStore.findOneBy({ email })) ||
             (await sessionService.signUp({ email, password: accessToken }));

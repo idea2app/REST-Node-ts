@@ -22,7 +22,7 @@ describe('Main business logic', () => {
     it('should create the first Administator only by the first User', async () => {
         const platformAdminAccount = {
             email: 'admin@test.com',
-            password: 'admin'
+            password: 'Admin-123'
         };
         const { data: user1 } = await client.user.userControllerSignUp(platformAdminAccount);
 
@@ -32,7 +32,7 @@ describe('Main business logic', () => {
 
         platformAdmin = { ...user1, ...platformAdminAccount };
 
-        const authorAccount = { email: 'author@test.com', password: 'author' };
+        const authorAccount = { email: 'author@test.com', password: 'Author-123' };
         const { data: user2 } = await client.user.userControllerSignUp(authorAccount);
 
         expect(user2.email).toBe(authorAccount.email);
@@ -44,8 +44,8 @@ describe('Main business logic', () => {
 
     it('should sign in a User with Email & Password', async () => {
         const { data: session } = await client.user.userControllerSignIn({
-            email: commonUser.email,
-            password: commonUser.password
+            email: commonUser.email!,
+            password: commonUser.password!
         });
 
         expect(session.email).toBe(commonUser.email);
@@ -64,7 +64,7 @@ describe('Main business logic', () => {
     });
 
     it("should get a User's profile by its ID", async () => {
-        const { data: user } = await client.user.userControllerGetOne(commonUser.id);
+        const { data: user } = await client.user.userControllerGetOne(commonUser.id!);
 
         const { password, token, deletedAt, ...profile } = commonUser;
 
@@ -75,7 +75,7 @@ describe('Main business logic', () => {
         const newProfile = { name: 'Test Client' };
 
         const { data: user } = await client.user.userControllerUpdateOne(
-            commonUser.id,
+            commonUser.id!,
             newProfile,
             { headers: { Authorization: `Bearer ${commonUser.token}` } }
         );
@@ -87,7 +87,7 @@ describe('Main business logic', () => {
     });
 
     it('should record 2 activities of a signed-up & edited User', async () => {
-        const UID = commonUser.id;
+        const UID = commonUser.id!;
         const activityLog = {
                 ...expectedBase,
                 tableName: 'User',

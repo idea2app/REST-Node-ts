@@ -13,7 +13,8 @@ import {
     Param,
     Post,
     Put,
-    QueryParams
+    QueryParams,
+    UnauthorizedError
 } from 'routing-controllers';
 import { ResponseSchema } from 'routing-controllers-openapi';
 
@@ -31,7 +32,7 @@ export class UserController {
     async sendEmailOTP(@Param('email') email: string) {
         const { error } = await supabase.auth.signInWithOtp({ email });
 
-        if (error) throw new HttpError(error.status, error.message);
+        if (error) throw new HttpError(error.status ?? 500, error.message);
     }
 
     @Get('/session')
@@ -56,7 +57,9 @@ export class UserController {
                 email,
                 token: password
             });
-            if (error) throw new HttpError(error.status, error.message);
+            if (error) throw new HttpError(error.status ?? 500, error.message);
+
+            if (!data.user) throw new UnauthorizedError('Invalid OTP response');
 
             user =
                 (await this.store.findOneBy({ email })) ||
@@ -90,7 +93,9 @@ export class UserController {
         });
         await activityLogService.logUpdate(updatedBy, 'User', id);
 
-        return sessionService.sign(await this.store.findOneBy({ id }));
+        const user = await this.store.findOneBy({ id });
+
+        return sessionService.sign(user!);
     }
 
     @Get('/:id')

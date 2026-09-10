@@ -2,7 +2,7 @@ import { S3Client } from '@aws-sdk/client-s3';
 import { createClient } from '@supabase/supabase-js';
 import { config } from 'dotenv';
 import { DataObject } from 'mobx-restful';
-import { FindOneOptions, FindOptionsWhere, ILike } from 'typeorm';
+import { FindOptionsWhere, ILike } from 'typeorm';
 import { likeNull } from 'web-utility';
 
 export const { NODE_ENV = 'development' } = process.env;
@@ -14,9 +14,9 @@ config({ path: [`.env.${NODE_ENV}.local`, '.env.local', '.env'] });
 export const {
     HTTP_PROXY,
     PORT = 8080,
-    APP_SECRET,
-    SUPABASE_PROJECT_URL,
-    SUPABASE_ANON_KEY,
+    APP_SECRET = '',
+    SUPABASE_PROJECT_URL = '',
+    SUPABASE_ANON_KEY = '',
     AWS_S3_END_POINT,
     AWS_S3_BUCKET,
     AWS_S3_ACCESS_KEY_ID,
@@ -37,8 +37,10 @@ export const searchConditionOf = <T extends DataObject>(
     keys: (keyof T)[],
     keywords = '',
     filter?: FindOptionsWhere<T>
-): FindOneOptions<T>['where'] =>
-    keywords ? keys.map(key => ({ [key]: ILike(`%${keywords}%`), ...filter })) : filter;
+) =>
+    keywords
+        ? (keys.map(key => ({ [key]: ILike(`%${keywords}%`), ...filter })) as FindOptionsWhere<T>[])
+        : filter;
 
 export const supabase = createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_KEY);
 

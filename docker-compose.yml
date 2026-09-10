@@ -2,6 +2,8 @@ version: '3'
 
 volumes:
     database-data:
+    caddy-data:
+    caddy-config:
 networks:
     idea2app:
 
@@ -70,4 +72,6 @@ services:
             - idea2app
         restart: always
         volumes:
+            - caddy-data:/data
+            - caddy-config:/config
             - ./Caddyfile:/etc/caddy/Caddyfile

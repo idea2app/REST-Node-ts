@@ -1,0 +1,13 @@
+packages:
+  - .
+autoInstallPeers: false
+minimumReleaseAge: 0
+
+overrides:
+  reflect-metadata: "$reflect-metadata"
+  koa: ^3.2
+allowBuilds:
+  '@parcel/watcher': true
+  better-sqlite3: true
+  core-js: true
+  unrs-resolver: true

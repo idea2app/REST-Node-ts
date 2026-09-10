@@ -1,5 +1,4 @@
-import { DataSource } from 'typeorm';
-import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
+import { DataSource, DataSourceOptions } from 'typeorm';
 
 import { isProduct } from '../utility';
 import { ActivityLog } from './ActivityLog';
@@ -26,14 +25,12 @@ const {
 const entities = [User, UserCredential, ActivityLog];
 
 const commonOptions: Pick<
-    SqliteConnectionOptions,
-    'logging' | 'synchronize' | 'entities' | 'invalidWhereValuesBehavior' | 'migrations'
+    Extract<DataSourceOptions, { type: 'better-sqlite3' }>,
+    'logging' | 'synchronize' | 'entities' | 'migrations'
 > = {
     logging: true,
     synchronize: true,
     entities,
-    // remove at next Major version: https://typeorm.io/docs/data-source/null-and-undefined-handling/#default-behavior
-    invalidWhereValuesBehavior: { null: 'throw', undefined: 'throw' },
     migrations: [`${isProduct ? '.data' : 'migration'}/*.ts`]
 };
 
@@ -42,7 +39,7 @@ export const dataSource = isProduct
           type: type as 'postgres',
           ssl: ssl === 'true',
           host,
-          port: +port,
+          port: Number(port ?? 5432),
           username: user,
           password,
           database,

@@ -1,23 +1,26 @@
-import {
+import type {
     AuthenticationJSON,
     AuthenticatorAssertionResponseJSON,
     AuthenticatorAttestationResponseJSON,
     AuthenticatorInfo,
     RegistrationJSON,
     UserInfo
-} from '@passwordless-id/webauthn/dist/esm/types';
+} from '@passwordless-id/webauthn' with { 'resolution-mode': 'import' };
 import { Type } from 'class-transformer';
 import {
     IsBoolean,
     IsEnum,
+    IsInt,
     IsNumber,
     IsObject,
     IsOptional,
     IsString,
+    Min,
     ValidateNested
 } from 'class-validator';
 import { Column, Entity } from 'typeorm';
 
+import { ListChunk } from './Base';
 import { UserBase } from './User';
 
 export class WebAuthnChallenge {
@@ -47,9 +50,7 @@ export class WebAuthnUser implements UserInfo {
     displayName: string;
 }
 
-export abstract class WebAuthnBase
-    implements Omit<RegistrationJSON, 'response' | 'user'>
-{
+export abstract class WebAuthnBase implements Omit<RegistrationJSON, 'response' | 'user'> {
     @IsEnum(CredentialType)
     type: CredentialType;
 
@@ -70,10 +71,7 @@ export abstract class WebAuthnBase
     challenge: string;
 }
 
-export class WebAuthnRegistration
-    extends WebAuthnBase
-    implements RegistrationJSON
-{
+export class WebAuthnRegistration extends WebAuthnBase implements RegistrationJSON {
     @IsObject()
     response: AuthenticatorAttestationResponseJSON;
 
@@ -82,10 +80,7 @@ export class WebAuthnRegistration
     user: WebAuthnUser;
 }
 
-export class WebAuthnAuthentication
-    extends WebAuthnBase
-    implements AuthenticationJSON
-{
+export class WebAuthnAuthentication extends WebAuthnBase implements AuthenticationJSON {
     @IsObject()
     response: AuthenticatorAssertionResponseJSON;
 }
@@ -152,4 +147,14 @@ export class UserCredential extends UserBase {
     @IsBoolean()
     @Column('boolean')
     userVerified: boolean;
+}
+
+export class UserCredentialListChunk implements ListChunk<UserCredential> {
+    @IsInt()
+    @Min(0)
+    count: number;
+
+    @Type(() => UserCredential)
+    @ValidateNested({ each: true })
+    list: UserCredential[];
 }

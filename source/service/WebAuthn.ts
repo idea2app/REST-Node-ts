@@ -1,32 +1,23 @@
-import { NotFoundError } from 'routing-controllers';
+import { BaseFilter, UserCredential } from '../model';
+import { UserServiceWithLog } from './User';
 
-import { BaseFilter, User, UserCredential } from '../model';
-import { BaseService } from './Base';
+export class UserCredentialService extends UserServiceWithLog<UserCredential> {
+    static emailFromUserHandle = (userHandle?: string) =>
+        userHandle && Buffer.from(userHandle, 'base64url').toString();
 
-export class UserCredentialService extends BaseService<UserCredential> {
     constructor() {
         super(UserCredential);
     }
 
-    getUserList(createdBy: User, filter: BaseFilter) {
-        return this.getList(filter, { createdBy: { id: createdBy.id } });
+    getUserList(id: number, filter: BaseFilter) {
+        return this.getList(filter, { createdBy: { id } });
     }
 
     findByUuidAndEmail(uuid: string, email: string) {
         return this.store.findOne({
             where: { uuid, createdBy: { email } },
-            relations: ['createdBy']
+            relations: { createdBy: true }
         });
-    }
-
-    async deleteUserCredential(deletedBy: User, id: number) {
-        const credential = await this.store.findOne({
-            where: { id, createdBy: { id: deletedBy.id } }
-        });
-
-        if (!credential) throw new NotFoundError(`UserCredential ${id} is not found`);
-
-        return this.store.softDelete(id);
     }
 }
 

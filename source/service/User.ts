@@ -51,7 +51,7 @@ export class UserService<T extends UserBase> extends BaseService<T> {
     getList(
         { createdBy, updatedBy, keywords, pageIndex, pageSize, ...filter }: UserBaseFilter,
         where?: FindOneOptions<T>['where'],
-        options: FindManyOptions<T> = { relations: ['createdBy'] }
+        options = { relations: { createdBy: true } } as FindManyOptions<T>
     ) {
         where ??= searchConditionOf<T>(
             this.searchKeys,

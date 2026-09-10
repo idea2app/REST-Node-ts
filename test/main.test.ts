@@ -22,7 +22,7 @@ describe('Main business logic', () => {
     it('should create the first Administator only by the first User', async () => {
         const platformAdminAccount = {
             email: 'admin@test.com',
-            password: 'admin'
+            password: 'Admin-123'
         };
         const { data: user1 } = await client.user.userControllerSignUp(platformAdminAccount);
 
@@ -32,7 +32,7 @@ describe('Main business logic', () => {
 
         platformAdmin = { ...user1, ...platformAdminAccount };
 
-        const authorAccount = { email: 'author@test.com', password: 'author' };
+        const authorAccount = { email: 'author@test.com', password: 'Author-123' };
         const { data: user2 } = await client.user.userControllerSignUp(authorAccount);
 
         expect(user2.email).toBe(authorAccount.email);

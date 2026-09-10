@@ -25,7 +25,7 @@ import {
     WebAuthnChallenge,
     WebAuthnRegistration
 } from '../model';
-import { activityLogService, sessionService, userCredentialService } from '../service';
+import { sessionService, UserCredentialService, userCredentialService } from '../service';
 
 @JsonController('/user/WebAuthn')
 export class WebAuthnController {
@@ -39,15 +39,15 @@ export class WebAuthnController {
     @Get('/session/credential')
     @Authorized()
     @ResponseSchema(UserCredentialListChunk)
-    getCredentialList(@CurrentUser() user: User, @QueryParams() filter: BaseFilter) {
-        return userCredentialService.getUserList(user, filter);
+    getCredentialList(@CurrentUser() { id }: User, @QueryParams() filter: BaseFilter) {
+        return userCredentialService.getUserList(id, filter);
     }
 
     @Post('/session/credential')
     @Authorized()
     @HttpCode(201)
     @ResponseSchema(UserCredential)
-    async createCredential(
+    async saveCredential(
         @CurrentUser() createdBy: User,
         @Body() { challenge, ...registration }: WebAuthnRegistration
     ) {
@@ -72,34 +72,30 @@ export class WebAuthnController {
         if (id !== createdBy.email || name !== createdBy.email)
             throw new BadRequestError('Invalid credential user');
 
-        const saved = await userCredentialService.createOne({
-            createdBy,
-            uuid,
-            authenticator,
-            ...credential,
-            synced,
-            userVerified
-        } as UserCredential);
-
-        await activityLogService.logCreate(createdBy, 'UserCredential', saved.id);
-
-        return saved;
+        return userCredentialService.createOne(
+            {
+                uuid,
+                authenticator,
+                ...credential,
+                synced,
+                userVerified
+            } as UserCredential,
+            createdBy
+        );
     }
 
     @Delete('/session/credential/:cid')
     @Authorized()
     @OnUndefined(204)
     async deleteCredential(@CurrentUser() deletedBy: User, @Param('cid') id: number) {
-        await userCredentialService.deleteUserCredential(deletedBy, id);
-
-        await activityLogService.logDelete(deletedBy, 'UserCredential', id);
+        await userCredentialService.deleteOne(id, deletedBy);
     }
 
     @Post('/authentication')
     @HttpCode(201)
     @ResponseSchema(User)
     async signIn(@Body() { challenge, ...authentication }: WebAuthnAuthentication) {
-        const email = emailFromUserHandle(authentication.response.userHandle),
+        const email = UserCredentialService.emailFromUserHandle(authentication.response.userHandle),
             userCredential =
                 email && (await userCredentialService.findByUuidAndEmail(authentication.id, email));
 
@@ -118,6 +114,3 @@ export class WebAuthnController {
         return sessionService.sign(createdBy);
     }
 }
-
-export const emailFromUserHandle = (userHandle?: string) =>
-    userHandle && Buffer.from(userHandle, 'base64url').toString();

@@ -65,7 +65,7 @@ export class ActivityLogController {
     async queryList(where: FindOptionsWhere<ActivityLog>, { pageSize, pageIndex }: BaseFilter) {
         const [list, count] = await store.findAndCount({
             where,
-            relations: ['createdBy'],
+            relations: { createdBy: true },
             skip: pageSize * (pageIndex - 1),
             take: pageSize
         });

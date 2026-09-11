@@ -12,7 +12,7 @@
         "declaration": true,
         "importHelpers": true,
         "skipLibCheck": true,
-        "types": ["jest"],
+        "types": ["node"],
         "rootDir": "source",
         "outDir": "dist"
     },

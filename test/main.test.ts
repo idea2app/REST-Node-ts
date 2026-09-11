@@ -1,4 +1,7 @@
-import { Operation } from '../source/model';
+import { describe, it } from 'node:test';
+
+import { expect } from 'expect';
+
 import { HttpResponse, User } from './client';
 import { client } from './shared';
 
@@ -99,8 +102,8 @@ describe('Main business logic', () => {
         expect(data).toMatchObject({
             count: 2,
             list: [
-                { ...activityLog, operation: Operation.Create },
-                { ...activityLog, operation: Operation.Update }
+                { ...activityLog, operation: 'create' },
+                { ...activityLog, operation: 'update' }
             ]
         });
     });

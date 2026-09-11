@@ -17,7 +17,7 @@
 4. ORM framework: [TypeORM][12]
 5. API document: [Swagger][13]
 6. Mock API: [OpenAPI backend][14]
-7. Test framework: [Jest][15]
+7. Test framework: Node.js Test Runner (`node:test`) + Jest-style `expect`
 
 ## Major features
 

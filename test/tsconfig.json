@@ -4,7 +4,7 @@
         "target": "ES6",
         "module": "Node16",
         "rootDir": "..",
-        "types": ["jest"]
+        "types": ["node"]
     },
     "include": ["./*", "../source/**/*"]
 }

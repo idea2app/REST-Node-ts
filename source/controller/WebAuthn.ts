@@ -1,6 +1,3 @@
-import type { CollectedClientData } from '@passwordless-id/webauthn' with {
-    'resolution-mode': 'import'
-};
 import {
     Authorized,
     BadRequestError,
@@ -45,39 +42,31 @@ export class WebAuthnController {
     @Authorized()
     @ResponseSchema(UserCredentialListChunk)
     getCredentialList(@CurrentUser() { id }: User, @QueryParams() filter: BaseFilter) {
-        return userCredentialService.getUserList(id, filter);
+        return userCredentialService.getList(filter, { createdBy: { id } });
     }
 
-    @Post('/session/credential')
+    @Post('/registration')
     @Authorized()
     @HttpCode(201)
     @ResponseSchema(UserCredential)
-    async saveCredential(
+    async signUp(
         @CurrentUser() createdBy: User,
         @Body() { challenge, ...registration }: WebAuthnRegistration
     ) {
-        if (!createdBy.email || registration.user?.id !== createdBy.email)
-            throw new BadRequestError('Invalid credential user');
-
         const { server } = await WebAuthn;
-
-        const { origin } = JSON.parse(
-            atob(registration.response.clientDataJSON)
-        ) as CollectedClientData;
-
+        const { origin } = UserCredentialService.extractClientData(registration.response);
         const {
             authenticator,
             credential: { id: uuid, ...credential },
             synced,
-            user: { id, name },
+            user: { name },
             userVerified
         } = await server.verifyRegistration(registration, {
             challenge,
             origin
         });
 
-        if (id !== createdBy.email || name !== createdBy.email)
-            throw new BadRequestError('Invalid credential user');
+        if (name !== createdBy.email) throw new BadRequestError('Invalid credential user');
 
         return userCredentialService.createOne(
             {
@@ -102,18 +91,17 @@ export class WebAuthnController {
     @HttpCode(201)
     @ResponseSchema(User)
     async signIn(@Body() { challenge, ...authentication }: WebAuthnAuthentication) {
-        const email = UserCredentialService.emailFromUserHandle(authentication.response.userHandle),
-            userCredential =
-                email && (await userCredentialService.findByUuidAndEmail(authentication.id, email));
+        const { server } = await WebAuthn;
+
+        const userCredential = await userCredentialService.store.findOne({
+            where: { uuid: authentication.id },
+            relations: { createdBy: true }
+        });
 
         if (!userCredential) throw new BadRequestError('Invalid credential');
 
-        const { server } = await WebAuthn;
-
         const { uuid, userVerified, createdBy, ...credential } = userCredential,
-            { origin } = JSON.parse(
-                atob(authentication.response.clientDataJSON)
-            ) as CollectedClientData;
+            { origin } = UserCredentialService.extractClientData(authentication.response);
 
         await server.verifyAuthentication(
             authentication,

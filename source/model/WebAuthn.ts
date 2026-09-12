@@ -11,10 +11,11 @@ import {
     IsBoolean,
     IsEnum,
     IsInt,
-    IsNumber,
     IsObject,
     IsOptional,
     IsString,
+    IsUrl,
+    IsUUID,
     Min,
     ValidateNested
 } from 'class-validator';
@@ -101,19 +102,20 @@ export enum AuthenticatorTransportType {
 }
 
 export class WebAuthnAuthenticator implements AuthenticatorInfo {
-    @IsString()
+    @IsUUID()
     aaguid: string;
 
     @IsString()
     name: string;
 
-    @IsString()
+    @IsUrl()
     icon_light: string;
 
-    @IsString()
+    @IsUrl()
     icon_dark: string;
 
-    @IsNumber()
+    @IsInt()
+    @Min(0)
     counter: number;
 }
 
